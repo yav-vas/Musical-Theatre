@@ -60,6 +60,7 @@ namespace Musical_Theatre.Controllers
         {
             if (ModelState.IsValid)
             {
+                hall.DateCreated = DateTime.Now;
                 _context.Add(hall);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -88,7 +89,7 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rows,Columns,DateCreated")] Hall hall)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rows,Columns")] Hall hall)
         {
             if (id != hall.Id)
             {
@@ -99,6 +100,15 @@ namespace Musical_Theatre.Controllers
             {
                 try
                 {
+                    var currentHall = await _context.Hall.FindAsync(id);
+                    var dateCreated = currentHall.DateCreated;
+
+                    if (currentHall != null)
+                    {
+                        _context.Entry(currentHall).State = EntityState.Detached;
+                    }
+
+                    hall.DateCreated = dateCreated;
                     _context.Update(hall);
                     await _context.SaveChangesAsync();
                 }

@@ -12,6 +12,6 @@ namespace Musical_Theatre.Models
         [Range(DataConstants.MinHallColumnsCount, DataConstants.MaxHallColumnsCount)]
         public int Columns { get; set; }
         [DataType(DataType.DateTime)]
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; }
     }
 }
