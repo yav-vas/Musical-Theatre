@@ -56,7 +56,7 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,rows,columns")] Hall hall)
+        public async Task<IActionResult> Create([Bind("Id,Name,Rows,Columns")] Hall hall)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,rows,columns,DateCreated")] Hall hall)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rows,Columns,DateCreated")] Hall hall)
         {
             if (id != hall.Id)
             {
