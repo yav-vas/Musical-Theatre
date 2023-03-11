@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Areas.Identity.Data;
+using Musical_Theatre.Models;
 
 namespace Musical_Theatre.Data;
 
@@ -19,4 +20,6 @@ public class Musical_TheatreContext : IdentityDbContext<Musical_TheatreUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
+
+    public DbSet<Musical_Theatre.Models.Hall> Hall { get; set; } = default!;
 }
