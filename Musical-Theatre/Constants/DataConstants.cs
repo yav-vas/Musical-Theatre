@@ -7,5 +7,6 @@
 
         public const int MinHallColumnsCount = 0;
         public const int MaxHallColumnsCount = 100;
+        public const double MinPriceValue = 1;
     }
 }

@@ -26,5 +26,6 @@ public class Musical_TheatreContext : IdentityDbContext<Musical_TheatreUser>
     public DbSet<Performance> Performances { get; set; }
     public DbSet<Seat> Seats { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<PriceCategory> PriceCategories { get; set; }
 
 }
