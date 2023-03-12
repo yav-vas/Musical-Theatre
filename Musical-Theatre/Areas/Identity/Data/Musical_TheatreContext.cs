@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Areas.Identity.Data;
 using Musical_Theatre.Models;
+using Musical_Theatre.Models.Data;
 
 namespace Musical_Theatre.Data;
 
@@ -21,5 +22,9 @@ public class Musical_TheatreContext : IdentityDbContext<Musical_TheatreUser>
         // Add your customizations after calling base.OnModelCreating(builder);
     }
 
-    public DbSet<Musical_Theatre.Models.Hall> Hall { get; set; } = default!;
+    public DbSet<Hall> Halls { get; set; } = default!;
+    public DbSet<Performance> Performances { get; set; }
+    public DbSet<Seat> Seats { get; set; }
+    public DbSet<Ticket> Tickets { get; set; }
+
 }
