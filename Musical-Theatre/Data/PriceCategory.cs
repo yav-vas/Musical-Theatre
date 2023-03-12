@@ -13,8 +13,8 @@ namespace Musical_Theatre.Data
         [Required]
         [Range(DataConstants.MinPriceValue, double.MaxValue)]
         public double Price { get; set; }
-
         [ForeignKey(nameof(Performance))]
         public int PerformanceId { get; set; }
+        public Performance Performance { get; set; }
     }
 }

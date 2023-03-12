@@ -11,7 +11,7 @@ namespace Musical_Theatre.Data
         [Required]
         [ForeignKey(nameof(Hall))]
         public int Hall_Id { get; set; }
-
+        public Hall Hall { get; set; }
         public string Details { get; set; }
 
     }

@@ -7,9 +7,12 @@ namespace Musical_Theatre.Data
     {
         [ForeignKey(nameof(Seat))]
         public int SeatId { get; set; }
+        public Seat Seat { get; set; }
         [ForeignKey(nameof(Ticket))]
         public int TicketId { get; set; }
+        public Ticket Ticket { get; set; }
         [ForeignKey(nameof(User))]
-        public int OwnerId { get; set; }
+        public string OwnerId { get; set; }
+        public User User { get; set; }
     }
 }

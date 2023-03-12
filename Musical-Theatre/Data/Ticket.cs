@@ -9,10 +9,11 @@ namespace Musical_Theatre.Data
         public int Id { get; set; }
 
         [ForeignKey(nameof(User))]
-        public int? Checker_Id { get; set; }
+        public string? Checker_Id { get; set; }
+        public User User { get; set; }
         [Required]
         [ForeignKey(nameof(Seat))]
         public int? Seat_Id { get; set; }
-
+        public Seat Seat { get; set; }
     }
 }
