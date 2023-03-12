@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Musical_Theatre.Models.Data
+namespace Musical_Theatre.Data
 {
     public class Performance
     {
@@ -11,7 +11,7 @@ namespace Musical_Theatre.Models.Data
         [Required]
         [ForeignKey(nameof(Hall))]
         public int Hall_Id { get; set; }
-        
+
         public string Details { get; set; }
 
     }

@@ -18,23 +18,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Musical_Theatre.Areas.Identity.Data;
+using Musical_Theatre.Data;
 
 namespace Musical_Theatre.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<Musical_TheatreUser> _signInManager;
-        private readonly UserManager<Musical_TheatreUser> _userManager;
-        private readonly IUserStore<Musical_TheatreUser> _userStore;
-        private readonly IUserEmailStore<Musical_TheatreUser> _emailStore;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly IUserStore<User> _userStore;
+        private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<Musical_TheatreUser> userManager,
-            IUserStore<Musical_TheatreUser> userStore,
-            SignInManager<Musical_TheatreUser> signInManager,
+            UserManager<User> userManager,
+            IUserStore<User> userStore,
+            SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -155,27 +155,27 @@ namespace Musical_Theatre.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private Musical_TheatreUser CreateUser()
+        private User CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<Musical_TheatreUser>();
+                return Activator.CreateInstance<User>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(Musical_TheatreUser)}'. " +
-                    $"Ensure that '{nameof(Musical_TheatreUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(Data.User)}'. " +
+                    $"Ensure that '{nameof(Data.User)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
 
-        private IUserEmailStore<Musical_TheatreUser> GetEmailStore()
+        private IUserEmailStore<User> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<Musical_TheatreUser>)_userStore;
+            return (IUserEmailStore<User>)_userStore;
         }
     }
 }

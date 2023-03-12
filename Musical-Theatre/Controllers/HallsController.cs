@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data;
-using Musical_Theatre.Models;
+using Musical_Theatre.Data.Context;
 
 namespace Musical_Theatre.Controllers
 {
@@ -22,20 +22,20 @@ namespace Musical_Theatre.Controllers
         // GET: Halls
         public async Task<IActionResult> Index()
         {
-              return _context.Hall != null ? 
-                          View(await _context.Hall.ToListAsync()) :
+              return _context.Halls != null ? 
+                          View(await _context.Halls.ToListAsync()) :
                           Problem("Entity set 'Musical_TheatreContext.Hall'  is null.");
         }
 
         // GET: Halls/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Hall == null)
+            if (id == null || _context.Halls == null)
             {
                 return NotFound();
             }
 
-            var hall = await _context.Hall
+            var hall = await _context.Halls
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (hall == null)
             {
@@ -71,12 +71,12 @@ namespace Musical_Theatre.Controllers
         // GET: Halls/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Hall == null)
+            if (id == null || _context.Halls == null)
             {
                 return NotFound();
             }
 
-            var hall = await _context.Hall.FindAsync(id);
+            var hall = await _context.Halls.FindAsync(id);
             if (hall == null)
             {
                 return NotFound();
@@ -100,7 +100,7 @@ namespace Musical_Theatre.Controllers
             {
                 try
                 {
-                    var currentHall = await _context.Hall.FindAsync(id);
+                    var currentHall = await _context.Halls.FindAsync(id);
                     var dateCreated = currentHall.DateCreated;
 
                     if (currentHall != null)
@@ -131,12 +131,12 @@ namespace Musical_Theatre.Controllers
         // GET: Halls/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Hall == null)
+            if (id == null || _context.Halls == null)
             {
                 return NotFound();
             }
 
-            var hall = await _context.Hall
+            var hall = await _context.Halls
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (hall == null)
             {
@@ -151,14 +151,14 @@ namespace Musical_Theatre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Hall == null)
+            if (_context.Halls == null)
             {
                 return Problem("Entity set 'Musical_TheatreContext.Hall'  is null.");
             }
-            var hall = await _context.Hall.FindAsync(id);
+            var hall = await _context.Halls.FindAsync(id);
             if (hall != null)
             {
-                _context.Hall.Remove(hall);
+                _context.Halls.Remove(hall);
             }
             
             await _context.SaveChangesAsync();
@@ -167,7 +167,7 @@ namespace Musical_Theatre.Controllers
 
         private bool HallExists(int id)
         {
-          return (_context.Hall?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Halls?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

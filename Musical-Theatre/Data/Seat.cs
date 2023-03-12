@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Musical_Theatre.Models.Data
+namespace Musical_Theatre.Data
 {
     public class Seat
     {
@@ -9,13 +9,12 @@ namespace Musical_Theatre.Models.Data
         public int Id { get; set; }
 
         [ForeignKey(nameof(Performance))]
-        public int Performance_Id { get; set; }
+        public int PerformanceId { get; set; }
         [Required]
         public int Row { get; set; }
         [Required]
-        public int Seat_Number { get; set; }
-        [Required]
+        public int SeatNumber { get; set; }
         [ForeignKey(nameof(PriceCategory))]
-        public int Price_Category_Id { get;}
+        public int PriceCategoryId { get; }
     }
 }

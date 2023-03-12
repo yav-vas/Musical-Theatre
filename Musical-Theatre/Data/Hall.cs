@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Musical_Theatre.Constants;
 
-namespace Musical_Theatre.Models.Data
+namespace Musical_Theatre.Data
 {
     public class Hall
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         public string Name { get; set; }
         [Required]

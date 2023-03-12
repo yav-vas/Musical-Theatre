@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using Musical_Theatre.Areas.Identity.Data
+@using Musical_Theatre.Data
 
-@inject SignInManager<Musical_TheatreUser> SignInManager
-@inject UserManager<Musical_TheatreUser> UserManager
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))

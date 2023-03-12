@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Musical_Theatre.Areas.Identity.Data;
 using Musical_Theatre.Data;
+using Musical_Theatre.Data.Context;
 
 namespace Musical_Theatre
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
 			var connectionString = builder.Configuration.GetConnectionString("Musical_TheatreContextConnection") ?? throw new InvalidOperationException("Connection string 'Musical_TheatreContextConnection' not found.");
 
-			builder.Services.AddDbContext<Musical_TheatreContext>(options => options.UseSqlServer(connectionString));
+			builder.Services.AddDbContext<Musical_TheatreContext>(options => options.UseMySQL(connectionString));
 
-			builder.Services.AddDefaultIdentity<Musical_TheatreUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Musical_TheatreContext>();
+			builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Musical_TheatreContext>();
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
