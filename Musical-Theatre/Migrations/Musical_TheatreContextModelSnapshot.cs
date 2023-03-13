@@ -185,12 +185,21 @@ namespace Musical_Theatre.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Hall_Id")
+                    b.Property<int>("HallId")
                         .HasColumnType("int");
+
+                    b.Property<string>("HallName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Hall_Id");
+                    b.HasIndex("HallId");
 
                     b.ToTable("Performances");
                 });
@@ -386,7 +395,7 @@ namespace Musical_Theatre.Migrations
                 {
                     b.HasOne("Musical_Theatre.Data.Hall", "Hall")
                         .WithMany()
-                        .HasForeignKey("Hall_Id")
+                        .HasForeignKey("HallId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -396,7 +405,7 @@ namespace Musical_Theatre.Migrations
             modelBuilder.Entity("Musical_Theatre.Data.PriceCategory", b =>
                 {
                     b.HasOne("Musical_Theatre.Data.Performance", "Performance")
-                        .WithMany()
+                        .WithMany("PriceCategories")
                         .HasForeignKey("PerformanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -438,6 +447,11 @@ namespace Musical_Theatre.Migrations
                     b.Navigation("Seat");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Musical_Theatre.Data.Performance", b =>
+                {
+                    b.Navigation("PriceCategories");
                 });
 #pragma warning restore 612, 618
         }
