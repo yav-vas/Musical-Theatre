@@ -5,6 +5,10 @@ namespace Musical_Theatre.Data
 {
     public class Hall
     {
+        public Hall()
+        {
+            this.Performances = new HashSet<Performance>();
+        }
         [Key]
         public int Id { get; set; }
 
@@ -19,5 +23,6 @@ namespace Musical_Theatre.Data
         public int Columns { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime DateCreated { get; set; }
+        public HashSet<Performance> Performances { get; set; }
     }
 }

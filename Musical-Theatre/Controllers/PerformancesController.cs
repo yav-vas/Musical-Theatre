@@ -57,12 +57,12 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Details")] Performance performance)
+        public async Task<IActionResult> Create([Bind("Name,HallId,Details")] Performance performance)
         {
             Hall hall =  _context.Halls.FirstOrDefault(h=> h.Id == performance.HallId);
-            if (hall!= null)
+            performance.Hall = hall;
+            if (performance.Hall!= null)
             {
-                performance.Hall = hall;
                 if (ModelState.IsValid)
                 {
                     _context.Add(performance);
@@ -71,7 +71,7 @@ namespace Musical_Theatre.Controllers
                 }
 
             }
-            ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performance.Hall.Name);
+            ViewData["HallId"] = new SelectList(_context.Halls, "Name", "Name", performance.Hall.Name);
             return View(performance);
         }
 
