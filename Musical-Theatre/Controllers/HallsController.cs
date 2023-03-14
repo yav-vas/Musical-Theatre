@@ -1,48 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Musical_Theatre.Services;
 using Musical_Theatre.Data;
-using Musical_Theatre.Data.Context;
+using MySql.Data.MySqlClient;
 
 namespace Musical_Theatre.Controllers
 {
     public class HallsController : Controller
     {
-        private readonly Musical_TheatreContext _context;
+        private readonly HallService _hallService;
 
-        public HallsController(Musical_TheatreContext context)
+        public HallsController(HallService hallService)
         {
-            _context = context;
+            _hallService = hallService;
         }
 
         // GET: Halls
         public async Task<IActionResult> Index()
         {
-              return _context.Halls != null ? 
-                          View(await _context.Halls.ToListAsync()) :
-                          Problem("Entity set 'Musical_TheatreContext.Hall'  is null.");
+            try
+            {
+                var halls = await _hallService.GetHalls();
+                return View(halls);
+            }
+            catch (ArgumentNullException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (MySqlException exception)
+            {
+                return NotFound(exception.Message);
+            }
         }
 
         // GET: Halls/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Halls == null)
+            if (id == null)
             {
-                return NotFound();
+                return NotFound("Id is null");
             }
 
-            var hall = await _context.Halls
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
+            try
             {
-                return NotFound();
+                var hall = await _hallService.GetHallById(id);
+                return View(hall);
             }
-
-            return View(hall);
+            catch (ArgumentNullException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (MySqlException exception)
+            {
+                return NotFound(exception.Message);
+            }
         }
 
         // GET: Halls/Create
@@ -60,70 +71,71 @@ namespace Musical_Theatre.Controllers
         {
             if (ModelState.IsValid)
             {
-                hall.DateCreated = DateTime.Now;
-                _context.Add(hall);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    int entitiesWritten = await _hallService.AddHall(hall);
+
+                    if (entitiesWritten == 0)
+                        return NotFound("No entities were written to the database!");
+
+                    return RedirectToAction(nameof(Index));
+                } 
+                catch (ArgumentNullException exception)
+                {
+                    return NotFound(exception.Message);
+                }
+                catch (MySqlException exception)
+                {
+                    return NotFound(exception.Message);
+                }
             }
             return View(hall);
         }
 
-        // GET: Halls/Edit/5
+        // GET: Halls/EditHall/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Halls == null)
+            try
             {
-                return NotFound();
+                var hall = await _hallService.GetHallById(id);
+                return View(hall);
             }
-
-            var hall = await _context.Halls.FindAsync(id);
-            if (hall == null)
+            catch (ArgumentNullException exception)
             {
-                return NotFound();
+                return NotFound(exception.Message);
             }
-            return View(hall);
+            catch (MySqlException exception)
+            {
+                return NotFound(exception.Message);
+            }
         }
 
-        // POST: Halls/Edit/5
+        // POST: Halls/EditHall/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rows,Columns")] Hall hall)
         {
-            if (id != hall.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var currentHall = await _context.Halls.FindAsync(id);
-                    var dateCreated = currentHall.DateCreated;
+                    int entitiesWritten = await _hallService.EditHall(id, hall);
 
-                    if (currentHall != null)
-                    {
-                        _context.Entry(currentHall).State = EntityState.Detached;
-                    }
+                    if (entitiesWritten == 0)
+                        return NotFound("No entites were written to the database!");
 
-                    hall.DateCreated = dateCreated;
-                    _context.Update(hall);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (ArgumentException exception)
                 {
-                    if (!HallExists(hall.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound(exception.Message);
                 }
-                return RedirectToAction(nameof(Index));
+                catch (MySqlException exception)
+                {
+                    return NotFound(exception.Message);
+                }
             }
             return View(hall);
         }
@@ -131,19 +143,19 @@ namespace Musical_Theatre.Controllers
         // GET: Halls/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Halls == null)
+            try
             {
-                return NotFound();
+                var hall = await _hallService.GetHallById(id);
+                return View(hall);
             }
-
-            var hall = await _context.Halls
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
+            catch (ArgumentNullException exception)
             {
-                return NotFound();
+                return NotFound(exception.Message);
             }
-
-            return View(hall);
+            catch (MySqlException exception)
+            {
+                return NotFound(exception.Message);
+            }
         }
 
         // POST: Halls/Delete/5
@@ -151,23 +163,23 @@ namespace Musical_Theatre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Halls == null)
+            try
             {
-                return Problem("Entity set 'Musical_TheatreContext.Hall'  is null.");
-            }
-            var hall = await _context.Halls.FindAsync(id);
-            if (hall != null)
-            {
-                _context.Halls.Remove(hall);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+                int entitiesWritten = await _hallService.DeleteHall(id);
 
-        private bool HallExists(int id)
-        {
-          return (_context.Halls?.Any(e => e.Id == id)).GetValueOrDefault();
+                if (entitiesWritten == 0)
+                    return NotFound("No entities were written to the database!");
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentNullException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (MySqlException exception)
+            {
+                return NotFound(exception.Message);
+            }
         }
     }
 }
