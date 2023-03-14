@@ -11,7 +11,7 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    [Migration("20230313165447_MusicalTheatre_Migration")]
+    [Migration("20230313200306_MusicalTheatre_Migration")]
     partial class MusicalTheatre_Migration
     {
         /// <inheritdoc />
@@ -190,10 +190,6 @@ namespace Musical_Theatre.Migrations
 
                     b.Property<int>("HallId")
                         .HasColumnType("int");
-
-                    b.Property<string>("HallName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -192,7 +192,6 @@ namespace Musical_Theatre.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     HallId = table.Column<int>(type: "int", nullable: false),
-                    HallName = table.Column<string>(type: "longtext", nullable: false),
                     Details = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>

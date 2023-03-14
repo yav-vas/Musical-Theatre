@@ -188,10 +188,6 @@ namespace Musical_Theatre.Migrations
                     b.Property<int>("HallId")
                         .HasColumnType("int");
 
-                    b.Property<string>("HallName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(40)
