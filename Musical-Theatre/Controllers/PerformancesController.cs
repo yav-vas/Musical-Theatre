@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data;
 using Musical_Theatre.Data.Context;
+using Musical_Theatre.Models;
 
 namespace Musical_Theatre.Controllers
 {
@@ -57,11 +58,16 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,HallId,Details")] Performance performance)
+        public async Task<IActionResult> Create([Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
-            Hall hall =  _context.Halls.FirstOrDefault(h=> h.Id == performance.HallId);
+            Hall hall =  _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
+
+            Performance performance = new Performance();
+            performance.Name = performanceForm.Name;
             performance.Hall = hall;
-            if (performance.Hall!= null)
+            performance.Details = performanceForm.Details;
+
+            if (performance.Hall != null)
             {
                 if (ModelState.IsValid)
                 {
@@ -70,9 +76,11 @@ namespace Musical_Theatre.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
+                ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performance.Hall.Name);
+                return View();
             }
-            ViewData["HallId"] = new SelectList(_context.Halls, "Name", "Name", performance.Hall.Name);
-            return View(performance);
+
+            return NotFound("Hall not found in the database");
         }
 
         // GET: Performances/Edit/5
