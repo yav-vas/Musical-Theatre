@@ -26,8 +26,19 @@ namespace Musical_Theatre.Controllers
         // GET: Performances
         public async Task<IActionResult> Index()
         {
-            var musical_TheatreContext = _context.Performances.Include(p => p.Hall);
-            return View(await musical_TheatreContext.ToListAsync());
+            try
+            {
+                var performances = await _performanceService.GetPerformances();
+                return View(performances);
+            }
+            catch (ArgumentNullException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (MySqlException exception)
+            {
+                return NotFound(exception.Message);
+            }
         }
 
         // GET: Performances/Details/5
@@ -38,9 +49,7 @@ namespace Musical_Theatre.Controllers
                 return NotFound();
             }
 
-            var performance = await _context.Performances
-                .Include(p => p.Hall)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var performance = await _performanceService.GetPerformanceById(id);
             if (performance == null)
             {
                 return NotFound();
@@ -122,7 +131,7 @@ namespace Musical_Theatre.Controllers
                 return NotFound();
             }
 
-            var performance = await _context.Performances.FindAsync(id);
+            var performance = await _performanceService.GetPerformanceById(id);
             if (performance == null)
             {
                 return NotFound();
@@ -143,29 +152,22 @@ namespace Musical_Theatre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
-            
-            Performance performance = new Performance();
-            performance.Id = id;
-            performance.Name = performanceForm.Name;
-            performance.HallId = performanceForm.HallId;
-            performance.Hall = _context.Halls.FirstOrDefault(Hall => Hall.Id == performanceForm.HallId);
-            performance.Details = performanceForm.Details;
 
-            if (id != performance.Id)
-            {
-                return NotFound();
-            }
-
+            Performance performance = _context.Performances.FirstOrDefault(p => p.Id == id);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(performance);
-                    await _context.SaveChangesAsync();
+                    int entitiesWritten = await _performanceService.EditPerformance(performanceForm, performance);
+
+                    if (entitiesWritten == 0)
+                        return NotFound("No entites were written to the database!");
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PerformanceExists(performance.Id))
+                    if (!PerformanceExists(performanceForm.PerformanceId))
                     {
                         return NotFound();
                     }
@@ -174,10 +176,9 @@ namespace Musical_Theatre.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performance.HallId);
-            return View(performance);
+            ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performanceForm.HallId);
+            return View(performanceForm);
         }
 
         // GET: Performances/Delete/5
@@ -188,9 +189,7 @@ namespace Musical_Theatre.Controllers
                 return NotFound();
             }
 
-            var performance = await _context.Performances
-                .Include(p => p.Hall)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var performance = await _performanceService.GetPerformanceById(id);
             if (performance == null)
             {
                 return NotFound();
@@ -208,14 +207,13 @@ namespace Musical_Theatre.Controllers
             {
                 return Problem("Entity set 'Musical_TheatreContext.Performances'  is null.");
             }
-            var performance = await _context.Performances.FindAsync(id);
-            if (performance != null)
-            {
-                _context.Performances.Remove(performance);
+           int entitiesWritten = await _performanceService.DeletePerformance(id);
+            if (entitiesWritten == 0) {
+
+                return NotFound("No entites were removed from the database!");
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+           return RedirectToAction(nameof(Index));
+           
         }
 
         private bool PerformanceExists(int id)

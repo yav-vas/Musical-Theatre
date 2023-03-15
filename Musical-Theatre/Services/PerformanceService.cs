@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Musical_Theatre.Data;
 using Musical_Theatre.Data.Context;
 using Musical_Theatre.Models;
+using MySql.Data.MySqlClient;
 
 namespace Musical_Theatre.Services
 {
@@ -24,7 +27,7 @@ namespace Musical_Theatre.Services
             return performances;
         }
 
-        public async Task<Performance?> GetHallById(int? id)
+        public async Task<Performance?> GetPerformanceById(int? id)
         {
             if (id == null)
                 throw new ArgumentNullException("Id is null");
@@ -58,6 +61,48 @@ namespace Musical_Theatre.Services
             
             await _context.Performances.AddAsync(performance);
 
+            int entitiesWritten = await _context.SaveChangesAsync();
+
+            return entitiesWritten;
+        }
+        public async Task<int> EditPerformance(PerformanceViewModel performanceForm, Performance performance)
+        {
+            Hall hall = await _context.Halls.FirstOrDefaultAsync(h => h.Id == performanceForm.HallId);
+            
+
+            if (_context.Performances == null)
+                throw new ArgumentNullException("Entity Performance is null!");
+
+            if (performanceForm == null)
+                throw new ArgumentNullException("Given performance is null");
+            if (performance == null)
+            {
+                throw new ArgumentNullException($"Performance with Id {performanceForm.PerformanceId} doesn't exist.");
+            }
+          
+            
+                _context.Entry(performance).State = EntityState.Detached;
+                performance.Id = performance.Id;
+                performance.Hall = hall;
+                performance.Details = performanceForm.Details;
+                performance.HallId= performanceForm.HallId;
+                performance.Name= performanceForm.Name;
+
+
+                _context.Performances.Update(performance);
+            int entitiesWritten = await _context.SaveChangesAsync();
+
+            return entitiesWritten;
+
+
+        }
+        public async Task<int> DeletePerformance(int id)
+        {
+            var performance = await GetPerformanceById(id);
+            if (performance != null)
+            {
+                _context.Performances.Remove(performance);
+            }
             int entitiesWritten = await _context.SaveChangesAsync();
 
             return entitiesWritten;
