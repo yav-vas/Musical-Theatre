@@ -97,7 +97,12 @@ namespace Musical_Theatre.Controllers
                 return NotFound();
             }
             ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performance.HallId);
-            return View(performance);
+
+            PerformanceViewModel performanceForm = new PerformanceViewModel();
+            performanceForm.Name = performance.Name;
+            performanceForm.HallId = performance.HallId;
+            performanceForm.Details = performance.Details;
+            return View(performanceForm);
         }
 
         // POST: Performances/Edit/5
@@ -105,8 +110,16 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,HallId,Details")] Performance performance)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
+            
+            Performance performance = new Performance();
+            performance.Id = id;
+            performance.Name = performanceForm.Name;
+            performance.HallId = performanceForm.HallId;
+            performance.Hall = _context.Halls.FirstOrDefault(Hall => Hall.Id == performanceForm.HallId);
+            performance.Details = performanceForm.Details;
+
             if (id != performance.Id)
             {
                 return NotFound();

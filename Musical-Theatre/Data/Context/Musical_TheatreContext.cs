@@ -16,8 +16,8 @@ public class Musical_TheatreContext : IdentityDbContext<User>
         builder.Entity<Performance>()
             .HasOne(p => p.Hall)
             .WithMany(h => h.Performances)
-            .HasForeignKey(p => p.HallId);
-
+            .HasForeignKey(p => p.HallId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         base.OnModelCreating(builder);
      

@@ -5,6 +5,7 @@ namespace Musical_Theatre.Models
 {
     public class PerformanceViewModel
     {
+        public int PerformanceId { get; set; }
         [Required]
         [MaxLength(DataConstants.MaxPerformanceNameLength)]
         public string Name { get; set; }
