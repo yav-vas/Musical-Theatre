@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data;
 using Musical_Theatre.Data.Context;
+using Musical_Theatre.Services;
 
 namespace Musical_Theatre
 {
@@ -18,6 +19,7 @@ namespace Musical_Theatre
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
+			builder.Services.AddScoped<PerformanceService>();
 
 			var app = builder.Build();
 

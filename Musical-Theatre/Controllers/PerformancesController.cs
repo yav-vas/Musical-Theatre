@@ -8,16 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data;
 using Musical_Theatre.Data.Context;
 using Musical_Theatre.Models;
+using Musical_Theatre.Services;
+using MySql.Data.MySqlClient;
 
 namespace Musical_Theatre.Controllers
 {
     public class PerformancesController : Controller
     {
         private readonly Musical_TheatreContext _context;
-
-        public PerformancesController(Musical_TheatreContext context)
+        private readonly PerformanceService _performanceService;
+        public PerformancesController(Musical_TheatreContext context, PerformanceService performanceService)
         {
             _context = context;
+            _performanceService = performanceService;
         }
 
         // GET: Performances
@@ -60,31 +63,59 @@ namespace Musical_Theatre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
-            Hall hall =  _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
+            //Hall hall =  _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
 
-            Performance performance = new Performance();
-            performance.Name = performanceForm.Name;
-            performance.Hall = hall;
-            performance.Details = performanceForm.Details;
+            //Performance performance = new Performance();
+            //performance.Name = performanceForm.Name;
+            //performance.Hall = hall;
+            //performance.Details = performanceForm.Details;
 
-            if (performance.Hall != null)
+            //if (performance.Hall != null)
+            //{
+            //    if (ModelState.IsValid)
+            //    {
+            //        _context.Add(performance);
+            //        await _context.SaveChangesAsync();
+            //        return RedirectToAction(nameof(Index));
+            //    }
+
+            //    ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performance.Hall.Name);
+            //    return View();
+            //}
+
+            //return NotFound("Hall not found in the database");
+
+            Hall hall = _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
+            if (hall != null)
             {
                 if (ModelState.IsValid)
                 {
-                    _context.Add(performance);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    try
+                    {
+                        int entitiesWritten = await _performanceService.AddPerformance(performanceForm);
+
+                        if (entitiesWritten == 0)
+                            return NotFound("No entities were written to the database!");
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (ArgumentNullException exception)
+                    {
+                        return NotFound(exception.Message);
+                    }
+                    catch (MySqlException exception)
+                    {
+                        return NotFound(exception.Message);
+                    }
+
                 }
-
-                ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performance.Hall.Name);
-                return View();
             }
-
-            return NotFound("Hall not found in the database");
+            ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performanceForm.HallId);
+            return View();
         }
 
-        // GET: Performances/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+            // GET: Performances/Edit/5
+            public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Performances == null)
             {

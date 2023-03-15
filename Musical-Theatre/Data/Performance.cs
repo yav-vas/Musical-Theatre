@@ -18,7 +18,6 @@ namespace Musical_Theatre.Data
 
         public int HallId { get; set; }
 
-        [ForeignKey(nameof(HallId))]
         public Hall Hall { get; set; }
         public string Details { get; set; }
         public HashSet<PriceCategory> PriceCategories{ get; set; }
