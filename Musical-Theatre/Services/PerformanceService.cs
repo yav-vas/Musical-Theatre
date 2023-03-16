@@ -23,7 +23,7 @@ namespace Musical_Theatre.Services
             if (_context.Performances == null)
                 throw new ArgumentNullException("Entity Performances is null!");
 
-            List<Performance> performances = await _context.Performances.ToListAsync();
+            List<Performance> performances = await _context.Performances.Include(p => p.Hall).ToListAsync();
             return performances;
         }
 
@@ -35,7 +35,7 @@ namespace Musical_Theatre.Services
             if (_context.Performances == null)
                 throw new ArgumentNullException("Entity Performances is null!");
 
-            var performance = await _context.Performances.FirstOrDefaultAsync(p => p.Id == id);
+            var performance = await _context.Performances.Include(p => p.Hall).FirstOrDefaultAsync(p => p.Id == id);
 
             if (performance == default)
                 throw new ArgumentNullException("Performance with id " + id + " not found!");
