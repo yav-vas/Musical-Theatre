@@ -72,28 +72,6 @@ namespace Musical_Theatre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
-            //Hall hall =  _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
-
-            //Performance performance = new Performance();
-            //performance.Name = performanceForm.Name;
-            //performance.Hall = hall;
-            //performance.Details = performanceForm.Details;
-
-            //if (performance.Hall != null)
-            //{
-            //    if (ModelState.IsValid)
-            //    {
-            //        _context.Add(performance);
-            //        await _context.SaveChangesAsync();
-            //        return RedirectToAction(nameof(Index));
-            //    }
-
-            //    ViewData["HallId"] = new SelectList(_context.Halls, "Id", "Name", performance.Hall.Name);
-            //    return View();
-            //}
-
-            //return NotFound("Hall not found in the database");
-
             Hall hall = _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
             if (hall != null)
             {

@@ -107,6 +107,10 @@ namespace Musical_Theatre.Services
 
             return entitiesWritten;
         }
+        public bool PerformanceExists(int id)
+        {
+            return (_context.Performances?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
 
     }
 }
