@@ -16,10 +16,12 @@ namespace Musical_Theatre
 			builder.Services.AddDbContext<Musical_TheatreContext>(options => options.UseMySQL(connectionString));
 
 			builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Musical_TheatreContext>();
-
-			// Add services to the container.
+			
+			// AddHall services to the container.
 			builder.Services.AddControllersWithViews();
 			builder.Services.AddScoped<PerformanceService>();
+
+			builder.Services.AddScoped<HallService, HallService>();
 
 			var app = builder.Build();
 
