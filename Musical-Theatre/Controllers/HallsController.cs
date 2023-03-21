@@ -84,6 +84,10 @@ namespace Musical_Theatre.Controllers
                 {
                     return NotFound(exception.Message);
                 }
+                catch (ArgumentException exception)
+                {
+                    return NotFound(exception.Message);
+                }
                 catch (MySqlException exception)
                 {
                     return NotFound(exception.Message);
