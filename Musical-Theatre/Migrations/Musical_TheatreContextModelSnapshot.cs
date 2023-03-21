@@ -165,12 +165,15 @@ namespace Musical_Theatre.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("Rows")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Halls");
                 });
@@ -196,6 +199,9 @@ namespace Musical_Theatre.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("HallId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Performances");
                 });

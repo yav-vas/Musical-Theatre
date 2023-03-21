@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Musical_Theatre.Migrations
 {
     /// <inheritdoc />
-    public partial class MusicalTheatre_Migration : Migration
+    public partial class MusicalTheatre_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,7 +62,7 @@ namespace Musical_Theatre.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false),
+                    Name = table.Column<string>(type: "varchar(255)", nullable: false),
                     Rows = table.Column<int>(type: "int", nullable: false),
                     Columns = table.Column<int>(type: "int", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false)
@@ -321,9 +321,21 @@ namespace Musical_Theatre.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Halls_Name",
+                table: "Halls",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Performances_HallId",
                 table: "Performances",
                 column: "HallId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Performances_Name",
+                table: "Performances",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PriceCategories_PerformanceId",

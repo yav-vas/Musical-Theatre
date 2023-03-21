@@ -15,7 +15,6 @@ namespace Musical_Theatre.Data
         [Required]
         [MaxLength(DataConstants.MaxPerformanceNameLength)]
         public string Name { get; set; }
-
         public int HallId { get; set; }
 
         public Hall Hall { get; set; }

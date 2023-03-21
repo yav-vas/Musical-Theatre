@@ -38,20 +38,6 @@ namespace Musical_Theatre.Services
             return hall;
         }
 
-        // TODO: could just add an unique hall name custom validation property
-        public async Task<bool> hallWithNameExists(string? hallName)
-        {
-            if (hallName == null)
-                return false;
-
-            var hall = await _context.Halls.FirstOrDefaultAsync(h => h.Name == hallName);
-
-            if (hall == default)
-                return false;
-
-            return true;
-        }
-
         // The method sets DateCreated to current date
         public async Task<int> AddHall(Hall hall)
         {
@@ -62,9 +48,6 @@ namespace Musical_Theatre.Services
                 throw new ArgumentNullException("Given hall is null");
 
             hall.DateCreated = DateTime.Now;
-
-            if (await hallWithNameExists(hall.Name))
-                throw new ArgumentException($"Hall with name {hall.Name} already exists in the database");
 
             await _context.Halls.AddAsync(hall);
             

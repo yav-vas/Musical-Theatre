@@ -11,8 +11,8 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    [Migration("20230315135718_On cascade delete performances when hall is deleted")]
-    partial class Oncascadedeleteperformanceswhenhallisdeleted
+    [Migration("20230321195958_Musical-Theatre_migration")]
+    partial class MusicalTheatre_migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,12 +168,15 @@ namespace Musical_Theatre.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("Rows")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Halls");
                 });
@@ -199,6 +202,9 @@ namespace Musical_Theatre.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("HallId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Performances");
                 });

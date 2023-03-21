@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Constants;
 
 namespace Musical_Theatre.Data
 {
+    [Index(nameof(Name), IsUnique = true)]
     public class Hall
     {
         public Hall()
