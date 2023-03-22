@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Services;
-using Musical_Theatre.Data;
 using MySql.Data.MySqlClient;
+using Musical_Theatre.Data.Models;
 
 namespace Musical_Theatre.Controllers
 {

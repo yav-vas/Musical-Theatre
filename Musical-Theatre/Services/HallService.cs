@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Musical_Theatre.Data;
 using Musical_Theatre.Data.Context;
+using Musical_Theatre.Data.Models;
 
 namespace Musical_Theatre.Services
 {

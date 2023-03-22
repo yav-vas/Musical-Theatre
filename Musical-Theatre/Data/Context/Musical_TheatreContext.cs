@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Musical_Theatre.Data.Models;
 using System.Reflection.Emit;
 
 namespace Musical_Theatre.Data.Context;
