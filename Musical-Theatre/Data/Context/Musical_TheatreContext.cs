@@ -15,14 +15,7 @@ public class Musical_TheatreContext : IdentityDbContext<User>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Performance>()
-            .HasOne(p => p.Hall)
-            .WithMany(h => h.Performances)
-            .HasForeignKey(p => p.HallId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         base.OnModelCreating(builder);
-     
     }
 
     public DbSet<Hall> Halls { get; set; }
