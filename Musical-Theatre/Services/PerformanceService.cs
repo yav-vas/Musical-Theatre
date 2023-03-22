@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Musical_Theatre.Data;
 using Musical_Theatre.Data.Context;
+using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
 using MySql.Data.MySqlClient;
 

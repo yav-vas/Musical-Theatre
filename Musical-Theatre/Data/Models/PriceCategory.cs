@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Musical_Theatre.Constants;
 
-namespace Musical_Theatre.Data
+namespace Musical_Theatre.Data.Models
 {
     public class PriceCategory
     {

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Musical_Theatre.Data;
+using Musical_Theatre.Data.Models;
 
 namespace Musical_Theatre.Areas.Identity.Pages.Account
 {

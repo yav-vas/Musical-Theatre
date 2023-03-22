@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Musical_Theatre.Data
+namespace Musical_Theatre.Data.Models
 {
     public class Seat
     {

@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Constants;
 
-namespace Musical_Theatre.Data
+namespace Musical_Theatre.Data.Models
 {
     [Index(nameof(Name), IsUnique = true)]
     public class Hall
     {
         public Hall()
         {
-            this.Performances = new HashSet<Performance>();
+            Performances = new HashSet<Performance>();
         }
         [Key]
         public int Id { get; set; }
