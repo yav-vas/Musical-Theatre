@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Constants;
+using Musical_Theatre.Data.Models.Validation;
 
 namespace Musical_Theatre.Data.Models
 {
-    [Index(nameof(Name), IsUnique = true)]
     public class Hall
     {
         public Hall()
@@ -15,7 +15,9 @@ namespace Musical_Theatre.Data.Models
         public int Id { get; set; }
 
         [Required]
+        [UniqueHallNameAttribute(nameof(Id))]
         public string Name { get; set; }
+
         [Required]
         [Range(DataConstants.MinHallRowsCount, DataConstants.MaxHallRowsCount)]
         public int Rows { get; set; }
@@ -23,8 +25,10 @@ namespace Musical_Theatre.Data.Models
         [Required]
         [Range(DataConstants.MinHallColumnsCount, DataConstants.MaxHallColumnsCount)]
         public int Columns { get; set; }
+
         [DataType(DataType.DateTime)]
         public DateTime DateCreated { get; set; }
+
         public HashSet<Performance> Performances { get; set; }
     }
 }

@@ -20,8 +20,6 @@ public class Musical_TheatreContext : IdentityDbContext<User>
             .WithMany(h => h.Performances)
             .HasForeignKey(p => p.HallId)
             .OnDelete(DeleteBehavior.Cascade);
-        builder.Entity<Performance>().HasIndex(p => p.Name).IsUnique();
-        builder.Entity<Hall>().HasIndex(h => h.Name).IsUnique();
 
         base.OnModelCreating(builder);
      
