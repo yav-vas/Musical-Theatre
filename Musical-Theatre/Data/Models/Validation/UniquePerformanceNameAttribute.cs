@@ -6,7 +6,7 @@ namespace Musical_Theatre.Data.Models.Validation
     public class UniquePerformanceNameAttribute : ValidationAttribute
     {
         public UniquePerformanceNameAttribute(string nameOfId)
-    => NameOfId = nameOfId;
+            => NameOfId = nameOfId;
 
         public string NameOfId { get; set; }
 
