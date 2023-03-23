@@ -94,6 +94,7 @@ namespace Musical_Theatre.Controllers
                 }
             }
             return View(hall);
+
         }
 
         // GET: Halls/EditHall/5

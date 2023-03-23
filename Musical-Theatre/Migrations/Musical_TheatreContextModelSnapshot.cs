@@ -232,7 +232,7 @@ namespace Musical_Theatre.Migrations
                     b.Property<int>("PerformanceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PriceCategoryId")
+                    b.Property<int?>("PriceCategoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("Row")
@@ -419,9 +419,7 @@ namespace Musical_Theatre.Migrations
 
                     b.HasOne("Musical_Theatre.Data.Models.PriceCategory", "PriceCategory")
                         .WithMany()
-                        .HasForeignKey("PriceCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PriceCategoryId");
 
                     b.Navigation("Performance");
 

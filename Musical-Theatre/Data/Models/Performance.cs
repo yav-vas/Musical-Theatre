@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Musical_Theatre.Constants;
+using Musical_Theatre.Data.Models.Validation;
 
 namespace Musical_Theatre.Data.Models
 {
@@ -14,6 +15,7 @@ namespace Musical_Theatre.Data.Models
         }
         [Required]
         [MaxLength(DataConstants.MaxPerformanceNameLength)]
+        [UniquePerformanceName(nameof(Id))]
         public string Name { get; set; }
         public int HallId { get; set; }
 

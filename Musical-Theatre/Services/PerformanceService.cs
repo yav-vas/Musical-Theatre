@@ -6,6 +6,7 @@ using Musical_Theatre.Data.Context;
 using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
 using MySql.Data.MySqlClient;
+using Mysqlx.Resultset;
 
 namespace Musical_Theatre.Services
 {
@@ -45,7 +46,11 @@ namespace Musical_Theatre.Services
 
         public async Task<int> AddPerformance(PerformanceViewModel performanceForm)
         {
+            List<Performance> performances = _context.Performances.ToList();
+            int performancesCount = performances.Count;
             Hall hall = _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
+            int rowsCount = hall.Rows;
+            int columnsCount = hall.Columns;
 
             if (_context.Performances == null)
                 throw new ArgumentNullException("Entity Performance is null!");
@@ -53,15 +58,30 @@ namespace Musical_Theatre.Services
             if (performanceForm == null)
                 throw new ArgumentNullException("Given performance is null");
             Performance performance = new Performance();
-            
+               performance.Id = performancesCount += 1;             
                performance.Name= performanceForm.Name;
                performance.Hall = hall;
                performance.HallId = performanceForm.HallId;
                performance.Details= performanceForm.Details;
             
             await _context.Performances.AddAsync(performance);
-
+             hall.Performances.Add(performance);
+             _context.Halls.Update(hall);
+            for (int row = 1; row <= rowsCount; row++)
+            {
+                for (int column = 1; column <= columnsCount; column++)
+                {
+                    Seat seat = new Seat();
+                    seat.Performance = performance;
+                    seat.PerformanceId = performance.Id;
+                    seat.SeatNumber = column;
+                    seat.Row= row;
+                    await _context.Seats.AddAsync(seat);
+                }
+            }
             int entitiesWritten = await _context.SaveChangesAsync();
+
+
 
             return entitiesWritten;
         }

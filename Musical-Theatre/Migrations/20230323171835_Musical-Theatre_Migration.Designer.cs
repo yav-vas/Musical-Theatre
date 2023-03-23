@@ -11,8 +11,8 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    [Migration("20230321195958_Musical-Theatre_migration")]
-    partial class MusicalTheatre_migration
+    [Migration("20230323171835_Musical-Theatre_Migration")]
+    partial class MusicalTheatre_Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -154,7 +154,7 @@ namespace Musical_Theatre.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Hall", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Hall", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,20 +168,17 @@ namespace Musical_Theatre.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Rows")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Halls");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Performance", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Performance", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -203,13 +200,10 @@ namespace Musical_Theatre.Migrations
 
                     b.HasIndex("HallId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Performances");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.PriceCategory", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.PriceCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -232,7 +226,7 @@ namespace Musical_Theatre.Migrations
                     b.ToTable("PriceCategories");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Seat", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Seat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -241,7 +235,7 @@ namespace Musical_Theatre.Migrations
                     b.Property<int>("PerformanceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PriceCategoryId")
+                    b.Property<int?>("PriceCategoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("Row")
@@ -259,7 +253,7 @@ namespace Musical_Theatre.Migrations
                     b.ToTable("Seats");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Ticket", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -281,7 +275,7 @@ namespace Musical_Theatre.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.User", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -356,7 +350,7 @@ namespace Musical_Theatre.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Musical_Theatre.Data.User", null)
+                    b.HasOne("Musical_Theatre.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -365,7 +359,7 @@ namespace Musical_Theatre.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Musical_Theatre.Data.User", null)
+                    b.HasOne("Musical_Theatre.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -380,7 +374,7 @@ namespace Musical_Theatre.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Musical_Theatre.Data.User", null)
+                    b.HasOne("Musical_Theatre.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -389,16 +383,16 @@ namespace Musical_Theatre.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Musical_Theatre.Data.User", null)
+                    b.HasOne("Musical_Theatre.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Performance", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Performance", b =>
                 {
-                    b.HasOne("Musical_Theatre.Data.Hall", "Hall")
+                    b.HasOne("Musical_Theatre.Data.Models.Hall", "Hall")
                         .WithMany("Performances")
                         .HasForeignKey("HallId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -407,9 +401,9 @@ namespace Musical_Theatre.Migrations
                     b.Navigation("Hall");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.PriceCategory", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.PriceCategory", b =>
                 {
-                    b.HasOne("Musical_Theatre.Data.Performance", "Performance")
+                    b.HasOne("Musical_Theatre.Data.Models.Performance", "Performance")
                         .WithMany("PriceCategories")
                         .HasForeignKey("PerformanceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -418,32 +412,30 @@ namespace Musical_Theatre.Migrations
                     b.Navigation("Performance");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Seat", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Seat", b =>
                 {
-                    b.HasOne("Musical_Theatre.Data.Performance", "Performance")
+                    b.HasOne("Musical_Theatre.Data.Models.Performance", "Performance")
                         .WithMany()
                         .HasForeignKey("PerformanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Musical_Theatre.Data.PriceCategory", "PriceCategory")
+                    b.HasOne("Musical_Theatre.Data.Models.PriceCategory", "PriceCategory")
                         .WithMany()
-                        .HasForeignKey("PriceCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PriceCategoryId");
 
                     b.Navigation("Performance");
 
                     b.Navigation("PriceCategory");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Ticket", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Ticket", b =>
                 {
-                    b.HasOne("Musical_Theatre.Data.User", "User")
+                    b.HasOne("Musical_Theatre.Data.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("Checker_Id");
 
-                    b.HasOne("Musical_Theatre.Data.Seat", "Seat")
+                    b.HasOne("Musical_Theatre.Data.Models.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("Seat_Id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -454,12 +446,12 @@ namespace Musical_Theatre.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Hall", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Hall", b =>
                 {
                     b.Navigation("Performances");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Performance", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Performance", b =>
                 {
                     b.Navigation("PriceCategories");
                 });
