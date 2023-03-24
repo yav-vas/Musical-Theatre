@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Musical_Theatre.Migrations
 {
     /// <inheritdoc />
-    public partial class MusicalTheatre_Migration : Migration
+    public partial class Initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -262,20 +262,28 @@ namespace Musical_Theatre.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Checker_Id = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Seat_Id = table.Column<int>(type: "int", nullable: false)
+                    CheckerId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    OwnerId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    SeatId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tickets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tickets_AspNetUsers_Checker_Id",
-                        column: x => x.Checker_Id,
+                        name: "FK_Tickets_AspNetUsers_CheckerId",
+                        column: x => x.CheckerId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Tickets_Seats_Seat_Id",
-                        column: x => x.Seat_Id,
+                        name: "FK_Tickets_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tickets_Seats_SeatId",
+                        column: x => x.SeatId,
                         principalTable: "Seats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -340,14 +348,20 @@ namespace Musical_Theatre.Migrations
                 column: "PriceCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_Checker_Id",
+                name: "IX_Tickets_CheckerId",
                 table: "Tickets",
-                column: "Checker_Id");
+                column: "CheckerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_Seat_Id",
+                name: "IX_Tickets_OwnerId",
                 table: "Tickets",
-                column: "Seat_Id");
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_SeatId",
+                table: "Tickets",
+                column: "SeatId",
+                unique: true);
         }
 
         /// <inheritdoc />

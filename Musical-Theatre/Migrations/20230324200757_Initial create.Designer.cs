@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Musical_Theatre.Data.Context;
 
@@ -10,9 +11,11 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    partial class Musical_TheatreContextModelSnapshot : ModelSnapshot
+    [Migration("20230324200757_Initial create")]
+    partial class Initialcreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,9 +260,11 @@ namespace Musical_Theatre.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CheckerId")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("OwnerId")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<int?>("SeatId")
@@ -436,11 +441,15 @@ namespace Musical_Theatre.Migrations
                 {
                     b.HasOne("Musical_Theatre.Data.Models.User", "Checker")
                         .WithMany()
-                        .HasForeignKey("CheckerId");
+                        .HasForeignKey("CheckerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Musical_Theatre.Data.Models.User", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Musical_Theatre.Data.Models.Seat", "Seat")
                         .WithOne("Ticket")

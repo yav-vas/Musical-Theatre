@@ -18,6 +18,11 @@ public class Musical_TheatreContext : IdentityDbContext<User>
         base.OnModelCreating(builder);
     }
 
+    internal object Entry()
+    {
+        throw new NotImplementedException();
+    }
+
     public DbSet<Hall> Halls { get; set; }
     public DbSet<Performance> Performances { get; set; }
     public DbSet<Seat> Seats { get; set; }

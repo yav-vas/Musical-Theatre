@@ -21,7 +21,7 @@ namespace Musical_Theatre
 			builder.Services.AddControllersWithViews();
 			builder.Services.AddScoped<PerformanceService>();
 
-			builder.Services.AddScoped<HallService, HallService>();
+			builder.Services.AddScoped<HallService>();
 
 			var app = builder.Build();
 

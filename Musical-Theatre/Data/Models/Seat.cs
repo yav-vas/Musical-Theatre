@@ -11,10 +11,14 @@ namespace Musical_Theatre.Data.Models
         [ForeignKey(nameof(Performance))]
         public int PerformanceId { get; set; }
         public Performance Performance { get; set; }
+
         [Required]
         public int Row { get; set; }
         [Required]
         public int SeatNumber { get; set; }
+
+        public Ticket? Ticket { get; set; }
+
         [ForeignKey(nameof(PriceCategory))]
         public int? PriceCategoryId { get; }
         public PriceCategory? PriceCategory { get; set; }
