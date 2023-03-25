@@ -3,15 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data.Context;
 using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
+using Musical_Theatre.Services;
+using MySql.Data.MySqlClient;
 
 namespace Musical_Theatre.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly Musical_TheatreContext _context;
-        public TicketsController(Musical_TheatreContext context) 
+        private readonly TicketService _ticketService;
+        public TicketsController(Musical_TheatreContext context, TicketService ticketService) 
         {
             _context = context;
+            _ticketService = ticketService;
         }
 
         public IActionResult Index()
@@ -28,23 +32,26 @@ namespace Musical_Theatre.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Buy(int? id, [Bind("Row,SeatNumber")] TicketViewModel ticketForm)
+        public async Task<IActionResult> Buy(int? id, [Bind("Row,SeatNumber")] TicketViewModel ticketForm)
         {
-            Performance performance = _context.Performances.FirstOrDefault(p => p.Id == id);
+           
+            
+                try
+                {
+                    int entitiesWritten = await _ticketService.BuyTicket(id, ticketForm);
+                    if (entitiesWritten == 0)
+                        return NotFound("No entities were written to the database!");
 
-            Ticket ticket = new Ticket();
-
-            Seat chosenSeat = _context.Seats.FirstOrDefault(s => s.PerformanceId == id && s.SeatNumber == ticketForm.SeatNumber && s.Row == ticketForm.Row);
-
-            ticket.Seat = chosenSeat;
-            ticket.SeatId = chosenSeat.Id;
-
-            chosenSeat.Ticket = ticket;
-
-            _context.Tickets.Add(ticket);
-            _context.SaveChanges();
-
-            return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (ArgumentNullException exception)
+                {
+                    return NotFound(exception.Message);
+                }
+                catch (MySqlException exception)
+                {
+                    return NotFound(exception.Message);
+                }
         }
     }
 }
