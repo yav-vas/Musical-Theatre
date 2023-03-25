@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Musical_Theatre.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialcreate : Migration
+    public partial class MusicalTheatre_Migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -262,8 +262,8 @@ namespace Musical_Theatre.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    CheckerId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    OwnerId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    CheckerId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    OwnerId = table.Column<string>(type: "varchar(255)", nullable: true),
                     SeatId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -273,14 +273,12 @@ namespace Musical_Theatre.Migrations
                         name: "FK_Tickets_AspNetUsers_CheckerId",
                         column: x => x.CheckerId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tickets_AspNetUsers_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tickets_Seats_SeatId",
                         column: x => x.SeatId,

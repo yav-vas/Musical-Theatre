@@ -11,8 +11,8 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    [Migration("20230324211946_Optional checker and owner")]
-    partial class Optionalcheckerandowner
+    [Migration("20230324235551_Musical-Theatre_Migration")]
+    partial class MusicalTheatre_Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
