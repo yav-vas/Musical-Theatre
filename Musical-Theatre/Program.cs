@@ -37,7 +37,22 @@ namespace Musical_Theatre
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
-			app.UseRouting();
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 406)
+                {
+                    context.Request.Path = "/NotFound";
+                    await next();
+                }
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/NotFound";
+                    await next();
+                }
+            });
+
+            app.UseRouting();
 
 			app.UseAuthorization();
 

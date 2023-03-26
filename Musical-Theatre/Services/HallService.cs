@@ -151,7 +151,7 @@ namespace Musical_Theatre.Services
                             }
                         }
                     }
-                    
+
            
                     else if(newRowCountDifference > 0 && newColumnCountDifference > 0)   
                     {
@@ -210,7 +210,7 @@ namespace Musical_Theatre.Services
                                 seat.PerformanceId = performance.Id;
                                 seat.SeatNumber = column + currentColumnCount;
                                 seat.Row = row;
-                                _context.Seats.Add(seat);
+                                _context.Seats.Add(seat); // TODO: should be in a different seat service
 
                             }
                         }

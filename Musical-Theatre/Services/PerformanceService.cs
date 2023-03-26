@@ -58,15 +58,15 @@ namespace Musical_Theatre.Services
             if (performanceForm == null)
                 throw new ArgumentNullException("Given performance is null");
             Performance performance = new Performance();
-               performance.Id = performancesCount += 1;             
-               performance.Name= performanceForm.Name;
-               performance.Hall = hall;
-               performance.HallId = performanceForm.HallId;
-               performance.Details= performanceForm.Details;
-            
+            performance.Id = performancesCount += 1;
+            performance.Name = performanceForm.Name;
+            performance.Hall = hall;
+            performance.HallId = performanceForm.HallId;
+            performance.Details = performanceForm.Details;
+
             await _context.Performances.AddAsync(performance);
-             hall.Performances.Add(performance);
-             _context.Halls.Update(hall);
+            hall.Performances.Add(performance);
+            _context.Halls.Update(hall);
             for (int row = 1; row <= rowsCount; row++)
             {
                 for (int column = 1; column <= columnsCount; column++)
@@ -75,7 +75,7 @@ namespace Musical_Theatre.Services
                     seat.Performance = performance;
                     seat.PerformanceId = performance.Id;
                     seat.SeatNumber = column;
-                    seat.Row= row;
+                    seat.Row = row;
                     await _context.Seats.AddAsync(seat);
                 }
             }
@@ -85,10 +85,11 @@ namespace Musical_Theatre.Services
 
             return entitiesWritten;
         }
+        // TODO: remove async methods
         public async Task<int> EditPerformance(PerformanceViewModel performanceForm, Performance performance)
         {
             Hall hall = await _context.Halls.FirstOrDefaultAsync(h => h.Id == performanceForm.HallId);
-            
+
 
             if (_context.Performances == null)
                 throw new ArgumentNullException("Entity Performance is null!");
@@ -99,19 +100,20 @@ namespace Musical_Theatre.Services
             {
                 throw new ArgumentNullException($"Performance with Id {performanceForm.PerformanceId} doesn't exist.");
             }
-          
-            
-                _context.Entry(performance).State = EntityState.Detached;
-                performance.Id = performance.Id;
-                performance.Hall = hall;
-                performance.Details = performanceForm.Details;
-                performance.HallId= performanceForm.HallId;
-                performance.Name= performanceForm.Name;
+
+            // TODO: may not be needed if remove async
+            _context.Entry(performance).State = EntityState.Detached;
+            performance.Hall = hall;
+            performance.Details = performanceForm.Details;
+            performance.HallId = performanceForm.HallId;
+            performance.Name = performanceForm.Name;
 
 
-                _context.Performances.Update(performance);
+            _context.Performances.Update(performance);
             int entitiesWritten = await _context.SaveChangesAsync();
 
+
+            // TODO: could return boolean
             return entitiesWritten;
 
 

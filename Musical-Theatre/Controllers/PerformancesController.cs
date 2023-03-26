@@ -130,7 +130,7 @@ namespace Musical_Theatre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
-
+            // TODO: _context must be used only in service; move getting performance in service
             Performance performance = _context.Performances.FirstOrDefault(p => p.Id == id);
             if (ModelState.IsValid)
             {
@@ -139,9 +139,17 @@ namespace Musical_Theatre.Controllers
                     int entitiesWritten = await _performanceService.EditPerformance(performanceForm, performance);
 
                     if (entitiesWritten == 0)
-                        return NotFound("No entites were written to the database!");
+                        return NotFound("No entites were written to the database!"); // TODO: simpler error
 
                     return RedirectToAction(nameof(Index));
+                }
+                catch (ArgumentNullException exception)
+                {
+                    return NotFound(exception.Message);
+                }
+                catch (MySqlException exception)
+                {
+                    return NotFound(exception.Message);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -162,6 +170,7 @@ namespace Musical_Theatre.Controllers
         // GET: Performances/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            // TODO: remove context from controller
             if (id == null || _context.Performances == null)
             {
                 return NotFound();
@@ -178,7 +187,7 @@ namespace Musical_Theatre.Controllers
 
         // POST: Performances/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken] // TODO: remove
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Performances == null)
