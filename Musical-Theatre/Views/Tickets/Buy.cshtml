@@ -6,8 +6,41 @@
 
 <h1>Buy a ticket</h1>
 
-<h4>Select seats for the Performance "@Html.DisplayFor(model => model.PerformanceName)"</h4>
+<h4>Select seat for the Performance "@Model.PerformanceName"</h4>
 <hr />
+<h5>Hall layout</h5>
+<table>
+    <tbody>
+        <tr style="border:none;">
+            <td  style="border:none;" width="40px" height="40px"></td>
+            @for(int i = 1; i <= Model.Hall.Columns; i++)
+            {
+                <td style="border:none;font-weight:bold;" width="40px" height="40px">@i</td>
+            }
+        </tr>
+        @foreach (var row in Model.Seats)
+        {
+            <tr>
+                <td style="border:none;font-weight:bold;" width="40px" height="40px">@row.ElementAt(0).Row</td>
+                @foreach (var seat in row)
+                {
+                    @if(seat.Ticket == null)
+                    {
+                        <td style="border: solid 1px; text-align: center; vertical-align: middle; background-color: green;">
+                            Free
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="border: solid 1px; text-align: center; vertical-align: middle; background-color: red;">
+                            Taken
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Buy">

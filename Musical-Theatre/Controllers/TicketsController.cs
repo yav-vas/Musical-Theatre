@@ -26,8 +26,24 @@ namespace Musical_Theatre.Controllers
 
         public IActionResult Buy(int? id)
         {
-            string name = _context.Performances.FirstOrDefault(p => p.Id == id)?.Name;
-            return View(new TicketViewModel(name));
+            Performance performance = _context.Performances.FirstOrDefault(p => p.Id == id);
+            string name = performance.Name;
+
+            Hall hall = _context.Performances.Include(p => p.Hall).FirstOrDefault(p => p.Id == id).Hall;
+
+            List<List<Seat>> seats = new List<List<Seat>>();
+
+            for (int i = 1; i <= hall.Rows; i++)
+            {
+                seats.Add(new List<Seat>());
+                for (int j = 1; j <= hall.Columns; j++)
+                {
+                    var seat = _context.Seats.Include(s => s.Ticket).FirstOrDefault(s => s.PerformanceId == performance.Id && s.Row == i && s.SeatNumber == j);
+                    seats.ElementAt(i - 1).Add(seat);
+                }
+            }
+
+            return View(new TicketViewModel(name, seats, hall));
         }
 
         [HttpPost]
