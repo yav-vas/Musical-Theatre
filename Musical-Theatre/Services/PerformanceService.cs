@@ -19,16 +19,16 @@ namespace Musical_Theatre.Services
             this._context = context;
         }
 
-        public async Task<List<Performance>?> GetPerformances()
+        public  List<Performance>? GetPerformances()
         {
             if (_context.Performances == null)
                 throw new ArgumentNullException("Entity Performances is null!");
 
-            List<Performance> performances = await _context.Performances.Include(p => p.Hall).ToListAsync();
+            List<Performance> performances =  _context.Performances.Include(p => p.Hall).ToList();
             return performances;
         }
 
-        public async Task<Performance?> GetPerformanceById(int? id)
+        public  Performance? GetPerformanceById(int? id)
         {
             if (id == null)
                 throw new ArgumentNullException("Id is null");
@@ -36,15 +36,30 @@ namespace Musical_Theatre.Services
             if (_context.Performances == null)
                 throw new ArgumentNullException("Entity Performances is null!");
 
-            var performance = await _context.Performances.Include(p => p.Hall).FirstOrDefaultAsync(p => p.Id == id);
+            var performance =  _context.Performances.Include(p => p.Hall).FirstOrDefault(p => p.Id == id);
 
             if (performance == default)
                 throw new ArgumentNullException("Performance with id " + id + " not found!");
 
             return performance;
         }
+        public Hall? GetPerformanceHall(int id)
+        {
+            if (id == null)
+                throw new ArgumentNullException("Id is null");
 
-        public async Task<int> AddPerformance(PerformanceViewModel performanceForm)
+            if (_context.Performances == null)
+                throw new ArgumentNullException("Entity Hall is null!");
+
+            var hall =  _context.Halls.FirstOrDefault(h => h.Id == id);
+
+            if (hall == default)
+                throw new ArgumentNullException("Hall with id " + id + " not found!");
+
+            return hall;
+        }
+
+        public int AddPerformance(PerformanceViewModel performanceForm)
         {
             List<Performance> performances = _context.Performances.ToList();
             int performancesCount = performances.Count;
@@ -56,7 +71,7 @@ namespace Musical_Theatre.Services
                 throw new ArgumentNullException("Entity Performance is null!");
 
             if (performanceForm == null)
-                throw new ArgumentNullException("Given performance is null");
+                throw new ArgumentNullException("Given hall is null");
             Performance performance = new Performance();
             performance.Id = performancesCount += 1;
             performance.Name = performanceForm.Name;
@@ -64,7 +79,7 @@ namespace Musical_Theatre.Services
             performance.HallId = performanceForm.HallId;
             performance.Details = performanceForm.Details;
 
-            await _context.Performances.AddAsync(performance);
+            _context.Performances.Add(performance);
             hall.Performances.Add(performance);
             _context.Halls.Update(hall);
             for (int row = 1; row <= rowsCount; row++)
@@ -76,33 +91,30 @@ namespace Musical_Theatre.Services
                     seat.PerformanceId = performance.Id;
                     seat.SeatNumber = column;
                     seat.Row = row;
-                    await _context.Seats.AddAsync(seat);
+                    _context.Seats.Add(seat);
                 }
             }
-            int entitiesWritten = await _context.SaveChangesAsync();
+            int entitiesWritten =  _context.SaveChanges();
 
 
 
             return entitiesWritten;
         }
-        // TODO: remove async methods
-        public async Task<int> EditPerformance(PerformanceViewModel performanceForm, Performance performance)
+        public  int EditPerformance(PerformanceViewModel performanceForm, Performance performance)
         {
-            Hall hall = await _context.Halls.FirstOrDefaultAsync(h => h.Id == performanceForm.HallId);
+            Hall hall = _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
 
 
             if (_context.Performances == null)
                 throw new ArgumentNullException("Entity Performance is null!");
 
             if (performanceForm == null)
-                throw new ArgumentNullException("Given performance is null");
+                throw new ArgumentNullException("Given hall is null");
             if (performance == null)
             {
                 throw new ArgumentNullException($"Performance with Id {performanceForm.PerformanceId} doesn't exist.");
             }
 
-            // TODO: may not be needed if remove async
-            _context.Entry(performance).State = EntityState.Detached;
             performance.Hall = hall;
             performance.Details = performanceForm.Details;
             performance.HallId = performanceForm.HallId;
@@ -110,7 +122,7 @@ namespace Musical_Theatre.Services
 
 
             _context.Performances.Update(performance);
-            int entitiesWritten = await _context.SaveChangesAsync();
+            int entitiesWritten =  _context.SaveChanges();
 
 
             // TODO: could return boolean
@@ -118,14 +130,14 @@ namespace Musical_Theatre.Services
 
 
         }
-        public async Task<int> DeletePerformance(int id)
+        public  int DeletePerformance(int id)
         {
-            var performance = await GetPerformanceById(id);
+            var performance =  GetPerformanceById(id);
             if (performance != null)
             {
                 _context.Performances.Remove(performance);
             }
-            int entitiesWritten = await _context.SaveChangesAsync();
+            int entitiesWritten =  _context.SaveChanges();
 
             return entitiesWritten;
         }

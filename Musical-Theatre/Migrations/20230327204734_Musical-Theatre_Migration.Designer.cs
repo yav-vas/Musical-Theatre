@@ -11,7 +11,7 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    [Migration("20230324235551_Musical-Theatre_Migration")]
+    [Migration("20230327204734_Musical-Theatre_Migration")]
     partial class MusicalTheatre_Migration
     {
         /// <inheritdoc />

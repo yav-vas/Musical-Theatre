@@ -23,6 +23,7 @@ namespace Musical_Theatre
 
 			builder.Services.AddScoped<HallService>();
 			builder.Services.AddScoped<TicketService>();
+			builder.Services.AddScoped<SeatService>();
 
 			var app = builder.Build();
 

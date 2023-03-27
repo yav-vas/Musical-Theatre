@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data.Context;
 using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
@@ -12,7 +13,7 @@ namespace Musical_Theatre.Services
         {
             this._context = context;
         }
-        public async Task<int> BuyTicket(int? id, TicketViewModel ticketForm)
+        public int BuyTicket(int? id, TicketViewModel ticketForm)
         {
             Performance performance = _context.Performances.FirstOrDefault(p => p.Id == id);
 
@@ -26,8 +27,16 @@ namespace Musical_Theatre.Services
             chosenseat.Ticket = ticket;
 
             _context.Tickets.Add(ticket);
-            int entitieswritten = await _context.SaveChangesAsync();
+            int entitieswritten = _context.SaveChanges();
             return entitieswritten;
+        }
+        public List<Ticket> GetTickets()
+        {
+            if (_context.Tickets == null)
+                throw new ArgumentNullException("Entity Tickets is null!");
+
+            List<Ticket> tickets = _context.Tickets.Include(t => t.Seat).ThenInclude(s=> s.Performance).ToList();
+            return tickets;
         }
     }
 }

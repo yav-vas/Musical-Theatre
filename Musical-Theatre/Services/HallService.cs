@@ -13,16 +13,19 @@ namespace Musical_Theatre.Services
             _context = context;
         }
 
-        public async Task<List<Hall>?> GetHalls()
+        public List<Hall>? GetHalls()
         {
             if (_context.Halls == null)
                 throw new ArgumentNullException("Entity Halls is null!");
 
-            List<Hall> halls = await _context.Halls.ToListAsync();
+            List<Hall> halls =  _context.Halls.ToList();
             return halls;
         }
-
-        public async Task<Hall?> GetHallById(int? id)
+        public IEnumerable<Hall> GetHallData()
+        {
+            return _context.Halls;
+        }
+        public  Hall GetHallById(int? id)
         {
             if (id == null)
                 throw new ArgumentNullException("Id is null");
@@ -30,7 +33,7 @@ namespace Musical_Theatre.Services
             if (_context.Halls == null)
                 throw new ArgumentNullException("Entity Halls is null!");
 
-            var hall = await _context.Halls.FirstOrDefaultAsync(h => h.Id == id);
+            var hall =  _context.Halls.FirstOrDefault(h => h.Id == id);
 
             if (hall == default)
                 throw new ArgumentNullException("Hall with id " + id + " not found!");
@@ -39,7 +42,7 @@ namespace Musical_Theatre.Services
         }
 
         // The method sets DateCreated to current date
-        public async Task<int> AddHall(Hall hall)
+        public int AddHall(Hall hall)
         {
             if (_context.Halls == null)
                 throw new ArgumentNullException("Entity Halls is null!");
@@ -49,16 +52,16 @@ namespace Musical_Theatre.Services
 
             hall.DateCreated = DateTime.Now;
 
-            await _context.Halls.AddAsync(hall);
+             _context.Halls.Add(hall);
 
             
-            int entitiesWritten = await _context.SaveChangesAsync();
+            int entitiesWritten =  _context.SaveChanges();
 
             return entitiesWritten;
         }
 
         // The method keeps the DateCreated to previous set date
-        public async Task<int> EditHall(int? id, Hall newHall)
+        public int EditHall(int? id, Hall newHall)
         {
             if (id == null)
                 throw new ArgumentNullException("Id is null");
@@ -75,7 +78,7 @@ namespace Musical_Theatre.Services
             try
             {
    
-                var currentHall = await _context.Halls.FindAsync(newHall.Id);
+                var currentHall =  _context.Halls.Find(newHall.Id);
                 {
 
                 }
@@ -223,7 +226,7 @@ namespace Musical_Theatre.Services
 
                 _context.Halls.Update(newHall);
 
-                int entitiesWritten = await _context.SaveChangesAsync();
+                int entitiesWritten =  _context.SaveChanges();
 
                 return entitiesWritten;
             }
@@ -233,7 +236,7 @@ namespace Musical_Theatre.Services
             }
         }
 
-        public async Task<int> DeleteHall(int? id)
+        public int DeleteHall(int? id)
         {
             if (id == null)
                 throw new ArgumentNullException("Id is null");
@@ -241,13 +244,13 @@ namespace Musical_Theatre.Services
             if (_context.Halls == null)
                 throw new ArgumentNullException("Entity Halls is null!");
 
-            var hall = await _context.Halls.FindAsync(id);
+            var hall =  _context.Halls.Find(id);
 
             if (hall == null)
                 throw new ArgumentNullException($"Hall with id {id} not found!");
 
             _context.Halls.Remove(hall);
-            int entitiesWritten = await _context.SaveChangesAsync();
+            int entitiesWritten = _context.SaveChanges();
 
             return entitiesWritten;
         }

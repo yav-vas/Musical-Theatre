@@ -10,36 +10,38 @@ namespace Musical_Theatre.Controllers
 {
     public class TicketsController : Controller
     {
-        private readonly Musical_TheatreContext _context;
         private readonly TicketService _ticketService;
-        public TicketsController(Musical_TheatreContext context, TicketService ticketService) 
+        private readonly PerformanceService _performanceService;
+        private readonly SeatService _seatService;
+        public TicketsController(TicketService ticketService, PerformanceService performanceService, SeatService seatService) 
         {
-            _context = context;
             _ticketService = ticketService;
+            _performanceService= performanceService;
+            _seatService= seatService;
         }
 
         public IActionResult Index()
         {
-            var result = _context.Tickets.Include(t => t.Seat).ThenInclude(s => s.Performance);
+            var result = _ticketService.GetTickets();
             return View(result);
         }
 
         public IActionResult Buy(int? id)
         {
-            Performance performance = _context.Performances.FirstOrDefault(p => p.Id == id);
+            Performance performance = _performanceService.GetPerformanceById(id);
             string name = performance.Name;
 
-            Hall hall = _context.Performances.Include(p => p.Hall).FirstOrDefault(p => p.Id == id).Hall;
+            Hall hall = _performanceService.GetPerformanceHall(performance.HallId);
 
             List<List<Seat>> seats = new List<List<Seat>>();
 
-            for (int i = 1; i <= hall.Rows; i++)
+            for (int row = 1; row <= hall.Rows; row++)
             {
                 seats.Add(new List<Seat>());
-                for (int j = 1; j <= hall.Columns; j++)
+                for (int column = 1; column <= hall.Columns; column++)
                 {
-                    var seat = _context.Seats.Include(s => s.Ticket).FirstOrDefault(s => s.PerformanceId == performance.Id && s.Row == i && s.SeatNumber == j);
-                    seats.ElementAt(i - 1).Add(seat);
+                    var seat = _seatService.GetSeatByRowAndColumn(row, column);
+                    seats.ElementAt(row - 1).Add(seat);
                 }
             }
 
@@ -48,13 +50,13 @@ namespace Musical_Theatre.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Buy(int? id, [Bind("Row,SeatNumber")] TicketViewModel ticketForm)
+        public IActionResult Buy(int? id, [Bind("Row,SeatNumber")] TicketViewModel ticketForm)
         {
            
             
                 try
                 {
-                    int entitiesWritten = await _ticketService.BuyTicket(id, ticketForm);
+                    int entitiesWritten =  _ticketService.BuyTicket(id, ticketForm);
                     if (entitiesWritten == 0)
                         return NotFound("No entities were written to the database!");
 

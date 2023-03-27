@@ -16,11 +16,11 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Halls
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             try
             {
-                var halls = await _hallService.GetHalls();
+                var halls =  _hallService.GetHalls();
                 return View(halls);
             }
             catch (ArgumentNullException exception)
@@ -34,7 +34,7 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Halls/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -43,7 +43,7 @@ namespace Musical_Theatre.Controllers
 
             try
             {
-                var hall = await _hallService.GetHallById(id);
+                var hall =  _hallService.GetHallById(id);
                 return View(hall);
             }
             catch (ArgumentNullException exception)
@@ -67,13 +67,13 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Rows,Columns")] Hall hall)
+        public IActionResult Create([Bind("Id,Name,Rows,Columns")] Hall hall)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    int entitiesWritten = await _hallService.AddHall(hall);
+                    int entitiesWritten =  _hallService.AddHall(hall);
 
                     if (entitiesWritten == 0)
                         return NotFound("No entities were written to the database!");
@@ -98,11 +98,11 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Halls/EditHall/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             try
             {
-                var hall = await _hallService.GetHallById(id);
+                var hall =  _hallService.GetHallById(id);
                 return View(hall);
             }
             catch (ArgumentNullException exception)
@@ -120,13 +120,13 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rows,Columns")] Hall hall)
+        public  IActionResult Edit(int id, [Bind("Id,Name,Rows,Columns")] Hall hall)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    int entitiesWritten = await _hallService.EditHall(id, hall);
+                    int entitiesWritten =  _hallService.EditHall(id, hall);
 
                     if (entitiesWritten == 0)
                         return NotFound("No entites were written to the database!");
@@ -146,11 +146,11 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Halls/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             try
             {
-                var hall = await _hallService.GetHallById(id);
+                var hall =  _hallService.GetHallById(id);
                 return View(hall);
             }
             catch (ArgumentNullException exception)
@@ -166,11 +166,11 @@ namespace Musical_Theatre.Controllers
         // POST: Halls/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
             try
             {
-                int entitiesWritten = await _hallService.DeleteHall(id);
+                int entitiesWritten =  _hallService.DeleteHall(id);
 
                 if (entitiesWritten == 0)
                     return NotFound("No entities were written to the database!");
