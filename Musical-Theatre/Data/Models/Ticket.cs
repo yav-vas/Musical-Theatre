@@ -19,5 +19,9 @@ namespace Musical_Theatre.Data.Models
         [Required]
         public int? SeatId { get; set; }
         public Seat Seat { get; set; }
+
+        public int? PerformanceId { get; set; }
+
+        public Performance Performance { get; set;}
     }
 }

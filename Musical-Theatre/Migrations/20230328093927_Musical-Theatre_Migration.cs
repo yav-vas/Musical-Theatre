@@ -264,7 +264,8 @@ namespace Musical_Theatre.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     CheckerId = table.Column<string>(type: "varchar(255)", nullable: true),
                     OwnerId = table.Column<string>(type: "varchar(255)", nullable: true),
-                    SeatId = table.Column<int>(type: "int", nullable: false)
+                    SeatId = table.Column<int>(type: "int", nullable: false),
+                    PerformanceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -278,6 +279,11 @@ namespace Musical_Theatre.Migrations
                         name: "FK_Tickets_AspNetUsers_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Tickets_Performances_PerformanceId",
+                        column: x => x.PerformanceId,
+                        principalTable: "Performances",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tickets_Seats_SeatId",
@@ -354,6 +360,11 @@ namespace Musical_Theatre.Migrations
                 name: "IX_Tickets_OwnerId",
                 table: "Tickets",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_PerformanceId",
+                table: "Tickets",
+                column: "PerformanceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_SeatId",

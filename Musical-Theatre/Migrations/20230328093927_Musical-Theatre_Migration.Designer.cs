@@ -11,7 +11,7 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    [Migration("20230327204734_Musical-Theatre_Migration")]
+    [Migration("20230328093927_Musical-Theatre_Migration")]
     partial class MusicalTheatre_Migration
     {
         /// <inheritdoc />
@@ -265,6 +265,9 @@ namespace Musical_Theatre.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<int?>("PerformanceId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("SeatId")
                         .IsRequired()
                         .HasColumnType("int");
@@ -274,6 +277,8 @@ namespace Musical_Theatre.Migrations
                     b.HasIndex("CheckerId");
 
                     b.HasIndex("OwnerId");
+
+                    b.HasIndex("PerformanceId");
 
                     b.HasIndex("SeatId")
                         .IsUnique();
@@ -445,6 +450,10 @@ namespace Musical_Theatre.Migrations
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
+                    b.HasOne("Musical_Theatre.Data.Models.Performance", "Performance")
+                        .WithMany()
+                        .HasForeignKey("PerformanceId");
+
                     b.HasOne("Musical_Theatre.Data.Models.Seat", "Seat")
                         .WithOne("Ticket")
                         .HasForeignKey("Musical_Theatre.Data.Models.Ticket", "SeatId")
@@ -454,6 +463,8 @@ namespace Musical_Theatre.Migrations
                     b.Navigation("Checker");
 
                     b.Navigation("Owner");
+
+                    b.Navigation("Performance");
 
                     b.Navigation("Seat");
                 });

@@ -47,7 +47,8 @@ namespace Musical_Theatre.Services
             if (_context.Seats == null)
                 throw new ArgumentNullException("Entity Seats is null!");
 
-            var seat = _context.Seats.Include(s => s.Ticket).FirstOrDefault(s => s.Row == row && s.SeatNumber == column);
+            var seat = _context.Seats.Include(s=> s.Ticket).ThenInclude(t=>t.Performance).FirstOrDefault(s => s.Row == row && s.SeatNumber == column);
+           
 
             if (seat == default)
                 throw new ArgumentNullException($"Seat with row {row} and seat number {column} not found!");
