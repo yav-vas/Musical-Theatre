@@ -24,11 +24,11 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Performances
-        public  IActionResult Index()
+        public IActionResult Index()
         {
             try
             {
-                var performances =  _performanceService.GetPerformances();
+                var performances = _performanceService.GetPerformances();
                 return View(performances);
             }
             catch (ArgumentNullException exception)
@@ -49,7 +49,7 @@ namespace Musical_Theatre.Controllers
                 return NotFound();
             }
 
-            var performance =  _performanceService.GetPerformanceById(id);
+            var performance = _performanceService.GetPerformanceById(id);
             if (performance == null)
             {
                 return NotFound();
@@ -70,7 +70,7 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  IActionResult Create([Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
+        public IActionResult Create([Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
             var hall = _hallService.GetHallById(performanceForm.HallId);
             if (hall != null)
@@ -79,7 +79,7 @@ namespace Musical_Theatre.Controllers
                 {
                     try
                     {
-                        int entitiesWritten =  _performanceService.AddPerformance(performanceForm);
+                        int entitiesWritten = _performanceService.AddPerformance(performanceForm);
 
                         if (entitiesWritten == 0)
                             return NotFound("No entities were written to the database!");
@@ -101,15 +101,15 @@ namespace Musical_Theatre.Controllers
             return View();
         }
 
-            // GET: Performances/Edit/5
-            public IActionResult Edit(int? id)
+        // GET: Performances/Edit/5
+        public IActionResult Edit(int? id)
         {
             if (id == null || _performanceService.GetPerformances == null)
             {
                 return NotFound();
             }
 
-            var performance =  _performanceService.GetPerformanceById(id);
+            var performance = _performanceService.GetPerformanceById(id);
             if (performance == null)
             {
                 return NotFound();
@@ -117,6 +117,7 @@ namespace Musical_Theatre.Controllers
             ViewData["HallId"] = new SelectList(_hallService.GetHallData(), "Id", "Name", performance.HallId);
 
             PerformanceViewModel performanceForm = new PerformanceViewModel();
+            performanceForm.PerformanceId = performance.Id;
             performanceForm.Name = performance.Name;
             performanceForm.HallId = performance.HallId;
             performanceForm.Details = performance.Details;
@@ -128,15 +129,14 @@ namespace Musical_Theatre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
+        public IActionResult Edit(int id, [Bind("PerformanceId,Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
-            // TODO: _context must be used only in service; move getting performance in service
             var performance = _performanceService.GetPerformanceById(id);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    int entitiesWritten =  _performanceService.EditPerformance(performanceForm, performance);
+                    int entitiesWritten = _performanceService.EditPerformance(performanceForm, performance);
 
                     if (entitiesWritten == 0)
                         return NotFound("No entites were written to the database!"); // TODO: simpler error
@@ -176,7 +176,7 @@ namespace Musical_Theatre.Controllers
                 return NotFound();
             }
 
-            var performance =  _performanceService.GetPerformanceById(id);
+            var performance = _performanceService.GetPerformanceById(id);
             if (performance == null)
             {
                 return NotFound();
@@ -194,13 +194,14 @@ namespace Musical_Theatre.Controllers
             {
                 return Problem("Entity set 'Musical_TheatreContext.Performances'  is null.");
             }
-           int entitiesWritten =  _performanceService.DeletePerformance(id);
-            if (entitiesWritten == 0) {
+            int entitiesWritten = _performanceService.DeletePerformance(id);
+            if (entitiesWritten == 0)
+            {
 
                 return NotFound("No entites were removed from the database!");
             }
-           return RedirectToAction(nameof(Index));
-           
+            return RedirectToAction(nameof(Index));
+
         }
 
     }

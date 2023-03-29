@@ -66,8 +66,7 @@ namespace Musical_Theatre.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Name,Rows,Columns")] Hall hall)
+        public IActionResult Create(Hall hall)
         {
             if (ModelState.IsValid)
             {

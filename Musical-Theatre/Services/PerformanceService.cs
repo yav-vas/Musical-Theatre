@@ -73,6 +73,7 @@ namespace Musical_Theatre.Services
             if (performanceForm == null)
                 throw new ArgumentNullException("Given hall is null");
             Performance performance = new Performance();
+            // TODO: create a constructor
             performance.Id = performancesCount += 1;
             performance.Name = performanceForm.Name;
             performance.Hall = hall;

@@ -13,11 +13,11 @@ namespace Musical_Theatre.Controllers
         private readonly TicketService _ticketService;
         private readonly PerformanceService _performanceService;
         private readonly SeatService _seatService;
-        public TicketsController(TicketService ticketService, PerformanceService performanceService, SeatService seatService) 
+        public TicketsController(TicketService ticketService, PerformanceService performanceService, SeatService seatService)
         {
             _ticketService = ticketService;
-            _performanceService= performanceService;
-            _seatService= seatService;
+            _performanceService = performanceService;
+            _seatService = seatService;
         }
 
         public IActionResult Index()
@@ -40,7 +40,7 @@ namespace Musical_Theatre.Controllers
                 seats.Add(new List<Seat>());
                 for (int column = 1; column <= hall.Columns; column++)
                 {
-                    var seat = _seatService.GetSeatByRowAndColumn(row, column);
+                    var seat = _seatService.GetSeatByRowAndColumnAndPerformance(row, column, performance);
                     seats.ElementAt(row - 1).Add(seat);
                 }
             }
@@ -52,24 +52,22 @@ namespace Musical_Theatre.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Buy(int? id, [Bind("Row,SeatNumber")] TicketViewModel ticketForm)
         {
-           
-            
-                try
-                {
-                    int entitiesWritten =  _ticketService.BuyTicket(id, ticketForm);
-                    if (entitiesWritten == 0)
-                        return NotFound("No entities were written to the database!");
+            try
+            {
+                int entitiesWritten = _ticketService.BuyTicket(id, ticketForm);
+                if (entitiesWritten == 0)
+                    return NotFound("No entities were written to the database!");
 
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (ArgumentNullException exception)
-                {
-                    return NotFound(exception.Message);
-                }
-                catch (MySqlException exception)
-                {
-                    return NotFound(exception.Message);
-                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentNullException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (MySqlException exception)
+            {
+                return NotFound(exception.Message);
+            }
         }
     }
 }

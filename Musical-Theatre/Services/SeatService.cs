@@ -8,9 +8,10 @@ namespace Musical_Theatre.Services
     public class SeatService
     {
         private readonly Musical_TheatreContext _context;
-        public SeatService(Musical_TheatreContext context) {
+        public SeatService(Musical_TheatreContext context)
+        {
 
-            _context= context;
+            _context = context;
 
         }
         public List<Seat> GetSeats()
@@ -18,7 +19,7 @@ namespace Musical_Theatre.Services
             if (_context.Seats == null)
                 throw new ArgumentNullException("Entity Seats is null!");
 
-            List<Seat> seats = _context.Seats.Include(s => s.Performance).ThenInclude(p=>p.Hall).ToList();
+            List<Seat> seats = _context.Seats.Include(s => s.Performance).ThenInclude(p => p.Hall).ToList();
             return seats;
         }
 
@@ -37,24 +38,25 @@ namespace Musical_Theatre.Services
 
             return seat;
         }
-        public Seat GetSeatByRowAndColumn(int? row, int? column)
+        public Seat GetSeatByRowAndColumnAndPerformance(int? row, int? column, Performance? performance)
         {
             if (row == null)
                 throw new ArgumentNullException("row is null");
             else if (column == null)
                 throw new ArgumentNullException("column is null");
+            else if (performance == null)
+                throw new ArgumentNullException("performance is null");
 
             if (_context.Seats == null)
                 throw new ArgumentNullException("Entity Seats is null!");
 
-            var seat = _context.Seats.Include(s=> s.Ticket).ThenInclude(t=>t.Performance).FirstOrDefault(s => s.Row == row && s.SeatNumber == column);
-           
+            var seat = _context.Seats.Include(s => s.Ticket).FirstOrDefault(s => s.Performance == performance && s.Row == row && s.SeatNumber == column);
+
 
             if (seat == default)
-                throw new ArgumentNullException($"Seat with row {row} and seat number {column} not found!");
+                throw new ArgumentNullException($"Seat with row {row} and seat number {column} in the performance {performance.Name} not found!");
 
             return seat;
-
         }
     }
 }
