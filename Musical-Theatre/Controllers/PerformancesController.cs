@@ -42,9 +42,9 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Performances/Details/5
-        public IActionResult Details(int? id)
+        public IActionResult Details(int id)
         {
-            if (id == null || _performanceService.GetPerformances() == null)
+            if (_performanceService.GetPerformances() == null)
             {
                 return NotFound();
             }
@@ -102,26 +102,42 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Performances/Edit/5
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null || _performanceService.GetPerformances == null)
+            if (_performanceService.GetPerformances == null)
             {
                 return NotFound();
             }
 
-            var performance = _performanceService.GetPerformanceById(id);
-            if (performance == null)
+            try
             {
-                return NotFound();
-            }
-            ViewData["HallId"] = new SelectList(_hallService.GetHallData(), "Id", "Name", performance.HallId);
+                var performance = _performanceService.GetPerformanceById(id);
+                if (performance == null)
+                {
+                    return NotFound();
+                }
 
-            PerformanceViewModel performanceForm = new PerformanceViewModel();
-            performanceForm.PerformanceId = performance.Id;
-            performanceForm.Name = performance.Name;
-            performanceForm.HallId = performance.HallId;
-            performanceForm.Details = performance.Details;
-            return View(performanceForm);
+                ViewData["HallId"] = new SelectList(_hallService.GetHallData(), "Id", "Name", performance.HallId);
+
+                PerformanceViewModel performanceForm = new PerformanceViewModel();
+                performanceForm.PerformanceId = performance.Id;
+                performanceForm.Name = performance.Name;
+                performanceForm.HallId = performance.HallId;
+                performanceForm.Details = performance.Details;
+                return View(performanceForm);
+            }
+            catch (ArgumentNullException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (MySqlException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                return NotFound(exception.Message);
+            }
         }
 
         // POST: Performances/Edit/5
@@ -131,11 +147,11 @@ namespace Musical_Theatre.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("PerformanceId,Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
-            var performance = _performanceService.GetPerformanceById(id);
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var performance = _performanceService.GetPerformanceById(id);
                     int entitiesWritten = _performanceService.EditPerformance(performanceForm, performance);
 
                     if (entitiesWritten == 0)
@@ -151,16 +167,9 @@ namespace Musical_Theatre.Controllers
                 {
                     return NotFound(exception.Message);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception exception)
                 {
-                    if (!_performanceService.PerformanceExists(performanceForm.PerformanceId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound(exception.Message);
                 }
             }
             ViewData["HallId"] = new SelectList(_hallService.GetHallData(), "Id", "Name", performanceForm.HallId);
@@ -168,10 +177,10 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Performances/Delete/5
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int id)
         {
             // TODO: remove context from controller
-            if (id == null || _performanceService.GetPerformances() == null)
+            if (_performanceService.GetPerformances() == null)
             {
                 return NotFound();
             }
@@ -197,7 +206,6 @@ namespace Musical_Theatre.Controllers
             int entitiesWritten = _performanceService.DeletePerformance(id);
             if (entitiesWritten == 0)
             {
-
                 return NotFound("No entites were removed from the database!");
             }
             return RedirectToAction(nameof(Index));

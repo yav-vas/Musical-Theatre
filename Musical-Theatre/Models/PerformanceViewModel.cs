@@ -12,6 +12,7 @@ namespace Musical_Theatre.Models
         [UniquePerformanceName(nameof(PerformanceId))]
         public string Name { get; set; }
         [Required]
+        [Display(Name = "Hall name")]
         public int HallId { get; set; }
         [Required]
         public string Details { get; set; }

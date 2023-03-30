@@ -26,12 +26,12 @@ namespace Musical_Theatre.Controllers
             return View(result);
         }
 
-        public IActionResult Buy(int? id)
+        public IActionResult Buy(int id)
         {
             Performance performance = _performanceService.GetPerformanceById(id);
             string name = performance.Name;
 
-            Hall hall = _performanceService.GetPerformanceHall(performance.HallId);
+            Hall hall = performance.Hall;
 
             List<List<Seat>> seats = new List<List<Seat>>();
 
@@ -50,7 +50,7 @@ namespace Musical_Theatre.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Buy(int? id, [Bind("Row,SeatNumber")] TicketViewModel ticketForm)
+        public IActionResult Buy(int id, [Bind("Row,SeatNumber")] TicketViewModel ticketForm)
         {
             try
             {

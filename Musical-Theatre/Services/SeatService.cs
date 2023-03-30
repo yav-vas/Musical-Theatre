@@ -14,6 +14,7 @@ namespace Musical_Theatre.Services
             _context = context;
 
         }
+
         public List<Seat> GetSeats()
         {
             if (_context.Seats == null)
@@ -38,6 +39,7 @@ namespace Musical_Theatre.Services
 
             return seat;
         }
+
         public Seat GetSeatByRowAndColumnAndPerformance(int? row, int? column, Performance? performance)
         {
             if (row == null)
@@ -57,6 +59,26 @@ namespace Musical_Theatre.Services
                 throw new ArgumentNullException($"Seat with row {row} and seat number {column} in the performance {performance.Name} not found!");
 
             return seat;
+        }
+
+        public void AddSeatsForPerformance(Performance performance)
+        {
+            Hall hall = performance.Hall;
+            int rowsCount = hall.Rows;
+            int columnsCount = hall.Columns;
+
+            for (int row = 1; row <= rowsCount; row++)
+            {
+                for (int column = 1; column <= columnsCount; column++)
+                {
+                    Seat seat = new Seat();
+                    seat.Performance = performance;
+                    seat.PerformanceId = performance.Id;
+                    seat.SeatNumber = column;
+                    seat.Row = row;
+                    _context.Seats.Add(seat);
+                }
+            }
         }
     }
 }

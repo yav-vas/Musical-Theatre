@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data.Context;
 using Musical_Theatre.Data.Models;
+using Musical_Theatre.Repositories;
+using Musical_Theatre.Repositories.Interfaces;
 using Musical_Theatre.Services;
 
 namespace Musical_Theatre
@@ -19,8 +21,11 @@ namespace Musical_Theatre
 			
 			// AddHall services to the container.
 			builder.Services.AddControllersWithViews();
-			builder.Services.AddScoped<PerformanceService>();
 
+			builder.Services.AddScoped<IPerformanceRepository, PerformanceRepository>();
+			builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+
+			builder.Services.AddScoped<PerformanceService>();
 			builder.Services.AddScoped<HallService>();
 			builder.Services.AddScoped<TicketService>();
 			builder.Services.AddScoped<SeatService>();

@@ -23,6 +23,8 @@ namespace Musical_Theatre.Models
             Hall = hall;
         }
 
+        public int TicketId { get; set; }
+
         public List<List<Seat>> Seats { get; set; }
 
         public Hall Hall { get; set; }

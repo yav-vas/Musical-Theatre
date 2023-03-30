@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Musical_Theatre.Data.Context;
 using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
+using Musical_Theatre.Repositories;
+using Musical_Theatre.Repositories.Interfaces;
 using MySql.Data.MySqlClient;
 using Mysqlx.Resultset;
 
@@ -13,30 +15,28 @@ namespace Musical_Theatre.Services
     public class PerformanceService
     {
         private readonly Musical_TheatreContext _context;
+        private readonly IPerformanceRepository performanceRepository;
+        private readonly SeatService seatService;
 
-        public PerformanceService(Musical_TheatreContext context)
+        public PerformanceService(IPerformanceRepository performanceRepository, Musical_TheatreContext context, SeatService seatService)
         {
-            this._context = context;
+            this.performanceRepository = performanceRepository;
+            _context = context;
+            this.seatService = seatService;
         }
 
-        public  List<Performance>? GetPerformances()
+        public  IEnumerable<Performance>? GetPerformances()
         {
-            if (_context.Performances == null)
-                throw new ArgumentNullException("Entity Performances is null!");
-
-            List<Performance> performances =  _context.Performances.Include(p => p.Hall).ToList();
+            IEnumerable<Performance> performances = performanceRepository.GetAllWithHall();
             return performances;
         }
 
-        public  Performance? GetPerformanceById(int? id)
+        public  Performance? GetPerformanceById(int id)
         {
-            if (id == null)
+            if (id == default)
                 throw new ArgumentNullException("Id is null");
 
-            if (_context.Performances == null)
-                throw new ArgumentNullException("Entity Performances is null!");
-
-            var performance =  _context.Performances.Include(p => p.Hall).FirstOrDefault(p => p.Id == id);
+            var performance = performanceRepository.GetByIdWithHall(id);
 
             if (performance == default)
                 throw new ArgumentNullException("Performance with id " + id + " not found!");
@@ -61,14 +61,10 @@ namespace Musical_Theatre.Services
 
         public int AddPerformance(PerformanceViewModel performanceForm)
         {
-            List<Performance> performances = _context.Performances.ToList();
-            int performancesCount = performances.Count;
+            int performancesCount = performanceRepository.GetCount();
             Hall hall = _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
             int rowsCount = hall.Rows;
             int columnsCount = hall.Columns;
-
-            if (_context.Performances == null)
-                throw new ArgumentNullException("Entity Performance is null!");
 
             if (performanceForm == null)
                 throw new ArgumentNullException("Given hall is null");
@@ -80,25 +76,10 @@ namespace Musical_Theatre.Services
             performance.HallId = performanceForm.HallId;
             performance.Details = performanceForm.Details;
 
-            _context.Performances.Add(performance);
-            hall.Performances.Add(performance);
-            _context.Halls.Update(hall);
-            for (int row = 1; row <= rowsCount; row++)
-            {
-                for (int column = 1; column <= columnsCount; column++)
-                {
-                    Seat seat = new Seat();
-                    seat.Performance = performance;
-                    seat.PerformanceId = performance.Id;
-                    seat.SeatNumber = column;
-                    seat.Row = row;
-                    _context.Seats.Add(seat);
-                }
-            }
+            performanceRepository.Add(performance);
+            seatService.AddSeatsForPerformance(performance);
+            
             int entitiesWritten =  _context.SaveChanges();
-
-
-
             return entitiesWritten;
         }
         public  int EditPerformance(PerformanceViewModel performanceForm, Performance performance)
@@ -133,18 +114,13 @@ namespace Musical_Theatre.Services
         }
         public  int DeletePerformance(int id)
         {
-            var performance =  GetPerformanceById(id);
+            var performance = GetPerformanceById(id);
             if (performance != null)
             {
-                _context.Performances.Remove(performance);
+                return performanceRepository.Remove(performance);
             }
-            int entitiesWritten =  _context.SaveChanges();
 
-            return entitiesWritten;
-        }
-        public bool PerformanceExists(int id)
-        {
-            return (_context.Performances?.Any(e => e.Id == id)).GetValueOrDefault();
+            return 0;
         }
 
     }
