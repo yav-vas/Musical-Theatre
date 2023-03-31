@@ -7,10 +7,12 @@ namespace Musical_Theatre.Services
     public class HallService
     {
         private readonly Musical_TheatreContext _context;
+        private readonly SeatService seatService;
 
-        public HallService(Musical_TheatreContext context)
+        public HallService(Musical_TheatreContext context, SeatService seatService)
         {
             _context = context;
+            this.seatService = seatService;
         }
 
         public List<Hall>? GetHalls()
@@ -75,165 +77,31 @@ namespace Musical_Theatre.Services
             if (id != newHall.Id)
                 throw new ArgumentException("Id mismatch");
 
-            try
+            var currentHall =  _context.Halls.Find(newHall.Id);
+                
+            if (currentHall == null)
+                throw new ArgumentNullException("Hall with id " + id + " not found!");
+
+            _context.Entry(currentHall).State = EntityState.Detached;
+
+            var performances = _context.Performances.Where(p => p.HallId == newHall.Id).ToList();
+            foreach (var performance in performances) 
             {
-   
-                var currentHall =  _context.Halls.Find(newHall.Id);
-                {
+                int currentRowCount = currentHall.Rows;
+                int currentColumnCount = currentHall.Columns;
+                int newRowCount = newHall.Rows;
+                int newColumnCount = newHall.Columns;
 
-                }
-                if (currentHall == null)
-                    throw new ArgumentNullException("Hall with id " + id + " not found!");
-                _context.Entry(currentHall).State = EntityState.Detached;
-                var performances = _context.Performances.Where(p => p.HallId == newHall.Id).ToList();
-                foreach (var performance in performances) 
-                {
-                    if (newHall.Rows == currentHall.Rows && newHall.Columns == currentHall.Columns)
-                    {
-                        break;
-                    }
-
-                    int currentRowCount = currentHall.Rows;
-                    int currentColumnCount = currentHall.Columns;
-                    int newRowCount = newHall.Rows;
-                    int newColumnCount = newHall.Columns;
-                    int newColumnCountDifference = newColumnCount - currentColumnCount;
-                    int newRowCountDifference = newRowCount - currentRowCount;
-
-
-                    if (newColumnCountDifference < 0 && newRowCountDifference < 0)
-                    {
-                        for (int row = 1; row <= newRowCount; row++)
-                        {
-                            for (int column = currentColumnCount; column > newColumnCount; column--)
-                            {
-                                List<Seat> seatsToBeRemoved = _context.Seats.Where(s => s.Row == row && s.SeatNumber == column).ToList();
-                                foreach (var seat in seatsToBeRemoved)
-                                {
-                                    _context.Seats.Remove(seat);
-                                }
-                            }
-                        }
-                        for (int row = 1; row <= Math.Abs(newRowCountDifference); row++)
-                        {
-                            int rowNumber = newRowCount + row;
-                            List<Seat> seatsToBeRemoved = _context.Seats.Where(s => s.Row == rowNumber).ToList();
-                            foreach (var seat in seatsToBeRemoved)
-                            {
-                                _context.Seats.Remove(seat);
-                            }
-                        }
-                    }
-                    else if (newColumnCountDifference < 0 && newRowCountDifference == 0)
-                    {
-                        for (int row = 1; row <= newRowCount; row++)
-                        {
-                            for (int column = currentColumnCount; column > newColumnCount; column--)
-                            {
-                                
-                                List<Seat> seatsToBeRemoved = _context.Seats.Where(s=> s.SeatNumber == column).ToList();
-                                foreach (var seat in seatsToBeRemoved)
-                                {
-                                    _context.Seats.Remove(seat);
-                                }
-                            }
-                        }
-                    }
-                    else if (newRowCountDifference < 0 && newColumnCountDifference == 0)
-                    {
-                        for (int row = currentRowCount; row > newRowCount; row--)
-                        {
-                            for (int column = 1; column <= newColumnCount; column++)
-                            {
-                                List<Seat> seatsToBeRemoved = _context.Seats.Where(s => s.Row == row).ToList();
-                                foreach (var seat in seatsToBeRemoved)
-                                {
-                                    _context.Seats.Remove(seat);
-                                }
-
-                            }
-                        }
-                    }
-
-           
-                    else if(newRowCountDifference > 0 && newColumnCountDifference > 0)   
-                    {
-
-                        for (int row = 1; row <= currentRowCount; row++)
-                        {
-                            for (int column = 1; column <= newColumnCountDifference; column++)
-                            {
-                                Seat seat = new Seat();
-                                seat.Performance = performance;
-                                seat.PerformanceId = performance.Id;
-                                seat.SeatNumber = column + currentColumnCount;
-                                seat.Row = row;
-                                _context.Seats.Add(seat);
-                            }
-                        }
-                        for (int row = 1; row <= newRowCountDifference; row++)
-                        {
-                            
-                            for (int column = 1; column <= newColumnCount; column++)
-                            {
-                                Seat seat = new Seat();
-                                seat.Performance = performance;
-                                seat.PerformanceId = performance.Id;
-                                seat.SeatNumber = column;
-                                seat.Row = row + currentRowCount;
-                                _context.Seats.Add(seat);
-                            }
-                        }
-                    }
-                    else if (newRowCountDifference > 0 && newColumnCountDifference == 0)
-                    {
-
-                        for (int row = 1; row <= newRowCount - currentRowCount; row++)
-                        {
-
-                            for (int column = 1; column <= currentColumnCount; column++)
-                            {
-                                Seat seat = new Seat();
-                                seat.Performance = performance;
-                                seat.PerformanceId = performance.Id;
-                                seat.SeatNumber = column;
-                                seat.Row = row + currentRowCount;
-                                _context.Seats.Add(seat);
-                            }
-                        }
-                    }
-                    else if (newRowCountDifference == 0 && newColumnCount > 0)
-                    {
-                        for (int row = 1; row <= currentRowCount; row++)
-                        {
-                            for (int column = 1; column <= newColumnCountDifference; column++)
-                            {
-                                Seat seat = new Seat();
-                                seat.Performance = performance;
-                                seat.PerformanceId = performance.Id;
-                                seat.SeatNumber = column + currentColumnCount;
-                                seat.Row = row;
-                                _context.Seats.Add(seat); // TODO: should be in a different seat service
-
-                            }
-                        }
-                    }
-
-
-                }
-
-                newHall.DateCreated = currentHall.DateCreated;
-
-                _context.Halls.Update(newHall);
-
-                int entitiesWritten =  _context.SaveChanges();
-
-                return entitiesWritten;
+                seatService.SetNewSeatLayout(performance, currentRowCount, currentColumnCount, newRowCount, newColumnCount);
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw new ArgumentException("The database has been changed before the update has been applied!");
-            }
+
+            newHall.DateCreated = currentHall.DateCreated;
+
+            _context.Halls.Update(newHall);
+
+            int entitiesWritten =  _context.SaveChanges();
+
+            return entitiesWritten;
         }
 
         public int DeleteHall(int? id)

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Musical_Theatre.Data.Context;
 
@@ -10,9 +11,11 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    partial class Musical_TheatreContextModelSnapshot : ModelSnapshot
+    [Migration("20230331201557_Remove unused fields from ticket")]
+    partial class Removeunusedfieldsfromticket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,11 +244,17 @@ namespace Musical_Theatre.Migrations
                     b.Property<int>("SeatNumber")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TicketId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PerformanceId");
 
                     b.HasIndex("PriceCategoryId");
+
+                    b.HasIndex("TicketId")
+                        .IsUnique();
 
                     b.ToTable("Seats");
                 });
@@ -256,13 +265,7 @@ namespace Musical_Theatre.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("SeatId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SeatId")
-                        .IsUnique();
 
                     b.ToTable("Tickets");
                 });
@@ -416,20 +419,15 @@ namespace Musical_Theatre.Migrations
                         .WithMany()
                         .HasForeignKey("PriceCategoryId");
 
+                    b.HasOne("Musical_Theatre.Data.Models.Ticket", "Ticket")
+                        .WithOne("Seat")
+                        .HasForeignKey("Musical_Theatre.Data.Models.Seat", "TicketId");
+
                     b.Navigation("Performance");
 
                     b.Navigation("PriceCategory");
-                });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Models.Ticket", b =>
-                {
-                    b.HasOne("Musical_Theatre.Data.Models.Seat", "Seat")
-                        .WithOne("Ticket")
-                        .HasForeignKey("Musical_Theatre.Data.Models.Ticket", "SeatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Seat");
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("Musical_Theatre.Data.Models.Hall", b =>
@@ -442,9 +440,10 @@ namespace Musical_Theatre.Migrations
                     b.Navigation("PriceCategories");
                 });
 
-            modelBuilder.Entity("Musical_Theatre.Data.Models.Seat", b =>
+            modelBuilder.Entity("Musical_Theatre.Data.Models.Ticket", b =>
                 {
-                    b.Navigation("Ticket");
+                    b.Navigation("Seat")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

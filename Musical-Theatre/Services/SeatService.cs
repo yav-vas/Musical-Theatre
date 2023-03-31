@@ -80,5 +80,40 @@ namespace Musical_Theatre.Services
                 }
             }
         }
+
+        public void SetNewSeatLayout(Performance performance, int currentRows, int currentColumns, int newRows, int newColumns)
+        {
+            int performanceId = performance.Id;
+
+            // First remove unneeded seats (cast the hall)
+            for (int row = 1; row <= currentRows; row++)
+            {
+                for (int column = 1; column <= currentColumns; column++)
+                {
+                    if (row > newRows || column > newColumns)
+                    {
+                        _context.Seats.RemoveRange(_context.Seats.Where(s => s.Row == row && s.SeatNumber == column && s.PerformanceId == performanceId));
+                    }
+                }
+            }
+
+            // Second add new seats (fill the hall)
+            for (int row = 1; row <= newRows; row++)
+            {
+                for (int column = 1; column <= newColumns; column++)
+                {
+                    if (row > currentRows || column > currentColumns)
+                    {
+                        Seat seat = new Seat();
+                        seat.PerformanceId = performanceId;
+                        seat.SeatNumber = column;
+                        seat.Row = row;
+                        _context.Seats.Add(seat);
+                    }
+                }
+            }
+
+            _context.SaveChanges();
+        }
     }
 }

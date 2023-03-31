@@ -8,20 +8,7 @@ namespace Musical_Theatre.Data.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey(nameof(Checker))]
-        public string? CheckerId { get; set; }
-        public User? Checker { get; set; }
-
-        [ForeignKey(nameof(Owner))]
-        public string? OwnerId { get; set; }
-        public User? Owner { get; set; }
-
-        [Required]
-        public int? SeatId { get; set; }
+        public int SeatId { get; set; }
         public Seat Seat { get; set; }
-
-        public int? PerformanceId { get; set; }
-
-        public Performance Performance { get; set;}
     }
 }

@@ -151,8 +151,8 @@ namespace Musical_Theatre.Controllers
             {
                 try
                 {
-                    var performance = _performanceService.GetPerformanceById(id);
-                    int entitiesWritten = _performanceService.EditPerformance(performanceForm, performance);
+                    var oldPerformance = _performanceService.GetPerformanceById(id);
+                    int entitiesWritten = _performanceService.EditPerformance(performanceForm, oldPerformance);
 
                     if (entitiesWritten == 0)
                         return NotFound("No entites were written to the database!"); // TODO: simpler error

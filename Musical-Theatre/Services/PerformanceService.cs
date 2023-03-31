@@ -86,22 +86,29 @@ namespace Musical_Theatre.Services
         {
             Hall hall = _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
 
+            if (hall == null)
+                throw new ArgumentException($"Hall with id {performanceForm.HallId} not found.");
 
             if (_context.Performances == null)
                 throw new ArgumentNullException("Entity Performance is null!");
 
             if (performanceForm == null)
                 throw new ArgumentNullException("Given hall is null");
+
             if (performance == null)
-            {
                 throw new ArgumentNullException($"Performance with Id {performanceForm.PerformanceId} doesn't exist.");
+
+            int currentHallId = performance.HallId;
+            int newHallId = performanceForm.HallId;
+
+            if (currentHallId != newHallId)
+            {
+                seatService.SetNewSeatLayout(performance, performance.Hall.Rows, performance.Hall.Columns, hall.Rows, hall.Columns);
             }
 
-            performance.Hall = hall;
             performance.Details = performanceForm.Details;
             performance.HallId = performanceForm.HallId;
             performance.Name = performanceForm.Name;
-
 
             _context.Performances.Update(performance);
             int entitiesWritten =  _context.SaveChanges();

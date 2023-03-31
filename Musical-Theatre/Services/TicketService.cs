@@ -38,11 +38,11 @@ namespace Musical_Theatre.Services
             Seat chosenSeat = _context.Seats.FirstOrDefault(s => s.PerformanceId == id && s.SeatNumber == ticketForm.SeatNumber && s.Row == ticketForm.Row);
 
             ticket.Seat = chosenSeat;
-            ticket.SeatId = chosenSeat.Id;
 
             chosenSeat.Ticket = ticket;
 
             ticketRepository.Add(ticket);
+
             int entitieswritten = _context.SaveChanges();
             return entitieswritten;
         }
