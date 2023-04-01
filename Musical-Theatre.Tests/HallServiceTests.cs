@@ -101,12 +101,11 @@ namespace Musical_Theatre.Tests
         public void EditHallAndChangeSeatsReturnsSeats()
         {
             hallRepository.Add(hall);
-            performanceViewModel.PerformanceId = performance.Id;
             performanceService.AddPerformance(performanceViewModel);
-            var seatsCount = seatRepository.GetAllSeatsForPerformance(performance).Count();
+            var seatsCount = seatRepository.GetAllSeatsForPerformance(1).Count();
             hallService.EditHall(hall.Id, secondHall);
             seatService.SetNewSeatLayout(performance, hall.Rows, hall.Columns, secondHall.Rows, secondHall.Columns);
-            var changedSeatsCount = seatRepository.GetAllSeatsForPerformance(performance).Count();
+            var changedSeatsCount = seatRepository.GetAllSeatsForPerformance(1).Count();
             Assert.AreNotEqual(seatsCount, changedSeatsCount);
         }
         [Test]

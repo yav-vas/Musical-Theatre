@@ -10,11 +10,18 @@ namespace Musical_Theatre.Data.Models
 
         }
 
-        public Seat(Performance performance, int row, int seatNumber)
+        public Seat(int id,Performance performance, int row, int seatNumber)
         {
+            Id = id;
             Performance = performance;
             Row = row;
             SeatNumber = seatNumber;
+        }
+        public Seat(Performance performance, int row, int seatNumber)
+        {
+            Performance= performance;
+            Row = row;
+            SeatNumber= seatNumber;
         }
 
         [Key]
