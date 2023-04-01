@@ -34,7 +34,7 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Halls/Details/5
-        public IActionResult Details(int? id)
+        public IActionResult Details(int id)
         {
             if (id == null)
             {
@@ -97,7 +97,7 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Halls/EditHall/5
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Halls/Delete/5
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int id)
         {
             try
             {

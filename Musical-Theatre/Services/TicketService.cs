@@ -10,22 +10,22 @@ namespace Musical_Theatre.Services
 {
     public class TicketService
     {
-        private readonly Musical_TheatreContext _context;
         private readonly IPerformanceRepository performanceRepository;
         private readonly ITicketRepository ticketRepository;
-        public TicketService(Musical_TheatreContext context, IPerformanceRepository performanceRepository, ITicketRepository ticketRepository)
+        private readonly ISeatRepository seatRepository;
+        public TicketService(IPerformanceRepository performanceRepository, ITicketRepository ticketRepository, ISeatRepository seatRepository)
         {
-            this._context = context;
             this.performanceRepository = performanceRepository;
             this.ticketRepository = ticketRepository;
+            this.seatRepository = seatRepository;
         }
 
         public List<Ticket> GetTickets()
         {
-            if (_context.Tickets == null)
+            if (ticketRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Tickets is null!");
 
-            List<Ticket> tickets = _context.Tickets.Include(t => t.Seat).ThenInclude(s => s.Performance).ToList();
+            List<Ticket> tickets = ticketRepository.GetAllWithSeatAndPerformance().ToList();
             return tickets;
         }
 
@@ -35,15 +35,15 @@ namespace Musical_Theatre.Services
 
             Ticket ticket = new Ticket();
 
-            Seat chosenSeat = _context.Seats.FirstOrDefault(s => s.PerformanceId == id && s.SeatNumber == ticketForm.SeatNumber && s.Row == ticketForm.Row);
+            Seat chosenSeat = seatRepository.GetByRowAndColumnAndPerformance(ticketForm.Row, ticketForm.SeatNumber,performance);
 
             ticket.Seat = chosenSeat;
 
             chosenSeat.Ticket = ticket;
 
-            ticketRepository.Add(ticket);
+            
 
-            int entitieswritten = _context.SaveChanges();
+            int entitieswritten = ticketRepository.Add(ticket);
             return entitieswritten;
         }
     }

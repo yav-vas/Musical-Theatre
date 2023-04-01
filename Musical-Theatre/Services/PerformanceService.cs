@@ -14,15 +14,18 @@ namespace Musical_Theatre.Services
 {
     public class PerformanceService
     {
-        private readonly Musical_TheatreContext _context;
         private readonly IPerformanceRepository performanceRepository;
         private readonly SeatService seatService;
+        private readonly IHallRepository hallRepository;
+        private readonly ICommonRepository commonRepository;
 
-        public PerformanceService(IPerformanceRepository performanceRepository, Musical_TheatreContext context, SeatService seatService)
+
+        public PerformanceService(IPerformanceRepository performanceRepository,SeatService seatService, IHallRepository hallRepository, ICommonRepository commonRepository)
         {
             this.performanceRepository = performanceRepository;
-            _context = context;
             this.seatService = seatService;
+            this.hallRepository = hallRepository;
+            this.commonRepository = commonRepository;
         }
 
         public  IEnumerable<Performance>? GetPerformances()
@@ -48,10 +51,10 @@ namespace Musical_Theatre.Services
             if (id == null)
                 throw new ArgumentNullException("Id is null");
 
-            if (_context.Performances == null)
+            if (performanceRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Hall is null!");
 
-            var hall =  _context.Halls.FirstOrDefault(h => h.Id == id);
+            var hall =  hallRepository.GetById(id);
 
             if (hall == default)
                 throw new ArgumentNullException("Hall with id " + id + " not found!");
@@ -62,7 +65,7 @@ namespace Musical_Theatre.Services
         public int AddPerformance(PerformanceViewModel performanceForm)
         {
             int performancesCount = performanceRepository.GetCount();
-            Hall hall = _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
+            Hall hall = hallRepository.GetById(performanceForm.HallId);
             int rowsCount = hall.Rows;
             int columnsCount = hall.Columns;
 
@@ -78,18 +81,18 @@ namespace Musical_Theatre.Services
 
             performanceRepository.Add(performance);
             seatService.AddSeatsForPerformance(performance);
-            
-            int entitiesWritten =  _context.SaveChanges();
-            return entitiesWritten;
+
+           
+            return 1;
         }
         public  int EditPerformance(PerformanceViewModel performanceForm, Performance performance)
         {
-            Hall hall = _context.Halls.FirstOrDefault(h => h.Id == performanceForm.HallId);
+            Hall hall = hallRepository.GetById(performanceForm.HallId);
 
             if (hall == null)
                 throw new ArgumentException($"Hall with id {performanceForm.HallId} not found.");
 
-            if (_context.Performances == null)
+            if (performanceRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Performance is null!");
 
             if (performanceForm == null)
@@ -110,8 +113,8 @@ namespace Musical_Theatre.Services
             performance.HallId = performanceForm.HallId;
             performance.Name = performanceForm.Name;
 
-            _context.Performances.Update(performance);
-            int entitiesWritten =  _context.SaveChanges();
+            
+            int entitiesWritten =  performanceRepository.Edit(performance);
 
 
             // TODO: could return boolean

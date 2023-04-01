@@ -1,4 +1,5 @@
-﻿using Musical_Theatre.Data.Models;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Musical_Theatre.Data.Models;
 
 namespace Musical_Theatre.Repositories.Interfaces
 {
@@ -10,5 +11,8 @@ namespace Musical_Theatre.Repositories.Interfaces
         void Add(Performance entity);
         int Edit(Performance entity);
         int Remove(Performance entity);
+        Performance GetPerformanceHall(int id);
+        List<Performance> GetAll();
+        List<Performance> GetHallPerformances(int id);
     }
 }

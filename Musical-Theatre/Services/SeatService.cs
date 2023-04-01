@@ -2,37 +2,38 @@
 using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data.Context;
 using Musical_Theatre.Data.Models;
+using Musical_Theatre.Repositories.Interfaces;
 
 namespace Musical_Theatre.Services
 {
     public class SeatService
     {
-        private readonly Musical_TheatreContext _context;
-        public SeatService(Musical_TheatreContext context)
-        {
+        private readonly ISeatRepository seatRepository;
 
-            _context = context;
+        public SeatService(ISeatRepository seatRepository)
+        {
+            this.seatRepository = seatRepository;
 
         }
 
         public List<Seat> GetSeats()
         {
-            if (_context.Seats == null)
+            if (seatRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Seats is null!");
 
-            List<Seat> seats = _context.Seats.Include(s => s.Performance).ThenInclude(p => p.Hall).ToList();
+            List<Seat> seats = seatRepository.GetAllWithHallAndPerformance();
             return seats;
         }
 
-        public Seat? GetSeatById(int? id)
+        public Seat? GetSeatById(int id)
         {
             if (id == null)
                 throw new ArgumentNullException("Id is null");
 
-            if (_context.Seats == null)
+            if (seatRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Seats is null!");
 
-            var seat = _context.Seats.Include(s => s.Performance).ThenInclude(p => p.Hall).FirstOrDefault(p => p.Id == id);
+            var seat = seatRepository.GetById(id);
 
             if (seat == default)
                 throw new ArgumentNullException("Seat with id " + id + " not found!");
@@ -40,7 +41,7 @@ namespace Musical_Theatre.Services
             return seat;
         }
 
-        public Seat GetSeatByRowAndColumnAndPerformance(int? row, int? column, Performance? performance)
+        public Seat GetSeatByRowAndColumnAndPerformance(int row, int column, Performance? performance)
         {
             if (row == null)
                 throw new ArgumentNullException("row is null");
@@ -49,10 +50,10 @@ namespace Musical_Theatre.Services
             else if (performance == null)
                 throw new ArgumentNullException("performance is null");
 
-            if (_context.Seats == null)
+            if (seatRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Seats is null!");
 
-            var seat = _context.Seats.Include(s => s.Ticket).FirstOrDefault(s => s.Performance == performance && s.Row == row && s.SeatNumber == column);
+            var seat = seatRepository.GetByRowAndColumnAndPerformance(row, column, performance);
 
 
             if (seat == default)
@@ -76,7 +77,7 @@ namespace Musical_Theatre.Services
                     seat.PerformanceId = performance.Id;
                     seat.SeatNumber = column;
                     seat.Row = row;
-                    _context.Seats.Add(seat);
+                    seatRepository.Add(seat);
                 }
             }
         }
@@ -92,7 +93,8 @@ namespace Musical_Theatre.Services
                 {
                     if (row > newRows || column > newColumns)
                     {
-                        _context.Seats.RemoveRange(_context.Seats.Where(s => s.Row == row && s.SeatNumber == column && s.PerformanceId == performanceId));
+                        seatRepository.RemoveRangeOfSeats(performanceId, row, column);
+
                     }
                 }
             }
@@ -108,12 +110,11 @@ namespace Musical_Theatre.Services
                         seat.PerformanceId = performanceId;
                         seat.SeatNumber = column;
                         seat.Row = row;
-                        _context.Seats.Add(seat);
+                        seatRepository.Add(seat);
                     }
                 }
             }
 
-            _context.SaveChanges();
         }
     }
 }

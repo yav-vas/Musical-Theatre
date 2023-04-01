@@ -1,41 +1,44 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Musical_Theatre.Data.Context;
 using Musical_Theatre.Data.Models;
+using Musical_Theatre.Repositories.Interfaces;
 
 namespace Musical_Theatre.Services
 {
     public class HallService
     {
-        private readonly Musical_TheatreContext _context;
         private readonly SeatService seatService;
+        private readonly IHallRepository hallRepository;
+        private readonly IPerformanceRepository performanceRepository;
 
-        public HallService(Musical_TheatreContext context, SeatService seatService)
+        public HallService(SeatService seatService, IHallRepository hallRepository, IPerformanceRepository performanceRepository)
         {
-            _context = context;
             this.seatService = seatService;
+            this.hallRepository = hallRepository;
+            this.performanceRepository = performanceRepository;
         }
 
         public List<Hall>? GetHalls()
         {
-            if (_context.Halls == null)
+            if (hallRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Halls is null!");
 
-            List<Hall> halls =  _context.Halls.ToList();
+            List<Hall> halls = hallRepository.GetAll();
             return halls;
         }
         public IEnumerable<Hall> GetHallData()
         {
-            return _context.Halls;
+            return hallRepository.GetData();
         }
-        public  Hall GetHallById(int? id)
+        public  Hall GetHallById(int id)
         {
             if (id == null)
                 throw new ArgumentNullException("Id is null");
 
-            if (_context.Halls == null)
+            if (hallRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Halls is null!");
 
-            var hall =  _context.Halls.FirstOrDefault(h => h.Id == id);
+            var hall = hallRepository.GetById(id);
 
             if (hall == default)
                 throw new ArgumentNullException("Hall with id " + id + " not found!");
@@ -46,7 +49,7 @@ namespace Musical_Theatre.Services
         // The method sets DateCreated to current date
         public int AddHall(Hall hall)
         {
-            if (_context.Halls == null)
+            if (hallRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Halls is null!");
 
             if (hall == null)
@@ -54,10 +57,8 @@ namespace Musical_Theatre.Services
 
             hall.DateCreated = DateTime.Now;
 
-             _context.Halls.Add(hall);
-
             
-            int entitiesWritten =  _context.SaveChanges();
+            int entitiesWritten = hallRepository.Add(hall);
 
             return entitiesWritten;
         }
@@ -68,7 +69,7 @@ namespace Musical_Theatre.Services
             if (id == null)
                 throw new ArgumentNullException("Id is null");
 
-            if (_context.Halls == null)
+            if (hallRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Halls is null!");
 
             if (newHall == null)
@@ -77,48 +78,47 @@ namespace Musical_Theatre.Services
             if (id != newHall.Id)
                 throw new ArgumentException("Id mismatch");
 
-            var currentHall =  _context.Halls.Find(newHall.Id);
+            var currentHall =  hallRepository.GetById(newHall.Id);
                 
             if (currentHall == null)
                 throw new ArgumentNullException("Hall with id " + id + " not found!");
 
-            _context.Entry(currentHall).State = EntityState.Detached;
+            hallRepository.Detach(currentHall);
 
-            var performances = _context.Performances.Where(p => p.HallId == newHall.Id).ToList();
+            var performances = performanceRepository.GetHallPerformances(newHall.Id);
             foreach (var performance in performances) 
             {
                 int currentRowCount = currentHall.Rows;
                 int currentColumnCount = currentHall.Columns;
                 int newRowCount = newHall.Rows;
                 int newColumnCount = newHall.Columns;
-
                 seatService.SetNewSeatLayout(performance, currentRowCount, currentColumnCount, newRowCount, newColumnCount);
             }
 
             newHall.DateCreated = currentHall.DateCreated;
 
-            _context.Halls.Update(newHall);
 
-            int entitiesWritten =  _context.SaveChanges();
+            int entitiesWritten = hallRepository.Edit(newHall);
+
 
             return entitiesWritten;
         }
 
-        public int DeleteHall(int? id)
+        public int DeleteHall(int id)
         {
             if (id == null)
                 throw new ArgumentNullException("Id is null");
 
-            if (_context.Halls == null)
+            if (hallRepository.GetAll() == null)
                 throw new ArgumentNullException("Entity Halls is null!");
 
-            var hall =  _context.Halls.Find(id);
+            var hall = hallRepository.GetById(id);
 
             if (hall == null)
                 throw new ArgumentNullException($"Hall with id {id} not found!");
 
-            _context.Halls.Remove(hall);
-            int entitiesWritten = _context.SaveChanges();
+            
+            int entitiesWritten = hallRepository.Remove(hall);
 
             return entitiesWritten;
         }

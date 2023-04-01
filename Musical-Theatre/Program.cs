@@ -24,6 +24,9 @@ namespace Musical_Theatre
 
 			builder.Services.AddScoped<IPerformanceRepository, PerformanceRepository>();
 			builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+			builder.Services.AddScoped<IHallRepository, HallRepository>();
+			builder.Services.AddScoped<ISeatRepository, SeatRepository>();
+			builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 
 			builder.Services.AddScoped<PerformanceService>();
 			builder.Services.AddScoped<HallService>();
