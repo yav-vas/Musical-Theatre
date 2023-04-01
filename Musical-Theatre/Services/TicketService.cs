@@ -33,12 +33,21 @@ namespace Musical_Theatre.Services
 
             Ticket ticket = new Ticket();
 
-            Seat chosenSeat = seatRepository.GetByRowAndColumnAndPerformance(ticketForm.Row, ticketForm.SeatNumber,performance);
+            Seat chosenSeat = seatRepository.GetByRowAndColumnAndPerformance(ticketForm.Row, ticketForm.SeatNumber, performance);
+
+            if (chosenSeat == null)
+            {
+                throw new ArgumentException("Seat does not exist! Check the hall layout again!");
+            }
 
             ticket.Seat = chosenSeat;
 
+            if (chosenSeat.Ticket != null)
+            {
+                throw new ArgumentException("Seat already taken! Check the hall layout again!");
+            }
+
             chosenSeat.Ticket = ticket;
-            
 
             int entitieswritten = ticketRepository.Add(ticket);
             return entitieswritten;

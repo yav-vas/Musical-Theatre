@@ -58,11 +58,13 @@ namespace Musical_Theatre.Services
         {
             int performancesCount = performanceRepository.GetCount();
             Hall hall = hallRepository.GetById(performanceForm.HallId);
-            int rowsCount = hall.Rows;
-            int columnsCount = hall.Columns;
 
             if (performanceForm == null)
-                throw new ArgumentNullException("Given hall is null");
+                throw new ArgumentNullException("Given performanceForm is null");
+
+            if (hall == null)
+                throw new ArgumentNullException("Given hall is not found");
+
             Performance performance = new Performance() 
             {
                 Id = performancesCount += 1,
