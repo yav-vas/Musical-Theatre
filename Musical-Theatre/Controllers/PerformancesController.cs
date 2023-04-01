@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Musical_Theatre.Constants;
 using Musical_Theatre.Models;
 using Musical_Theatre.Services.Interfaces;
 using MySql.Data.MySqlClient;
+using System;
 
 namespace Musical_Theatre.Controllers
 {
@@ -26,11 +28,11 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
             }
             catch (MySqlException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
             }
         }
 
@@ -39,16 +41,28 @@ namespace Musical_Theatre.Controllers
         {
             if (_performanceService.GetPerformances() == null)
             {
-                return NotFound();
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
             }
-
-            var performance = _performanceService.GetPerformanceById(id);
-            if (performance == null)
+            if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(HomeController.Error), "Id is null");
+            }
+            try
+            {
+                var performance = _performanceService.GetPerformanceById(id);
+                return View(performance);
+            }
+            catch (ArgumentNullException exception)
+            {
+
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));
+                
+            }
+            catch (MySqlException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
             }
 
-            return View(performance);
         }
 
         // GET: Performances/Create
@@ -75,17 +89,17 @@ namespace Musical_Theatre.Controllers
                         int entitiesWritten = _performanceService.AddPerformance(performanceForm);
 
                         if (entitiesWritten == 0)
-                            return NotFound("No entities were written to the database!");
+                        return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));
 
                         return RedirectToAction(nameof(Index));
                     }
                     catch (ArgumentNullException exception)
                     {
-                        return NotFound(exception.Message);
+                        return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));
                     }
                     catch (MySqlException exception)
                     {
-                        return NotFound(exception.Message);
+                        return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.CreationError));
                     }
 
                 }
@@ -97,9 +111,9 @@ namespace Musical_Theatre.Controllers
         // GET: Performances/Edit/5
         public IActionResult Edit(int id)
         {
-            if (_performanceService.GetPerformances == null)
+            if (_performanceService.GetPerformances() == null)
             {
-                return NotFound();
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
             }
 
             try
@@ -121,15 +135,11 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));
             }
             catch (MySqlException exception)
             {
-                return NotFound(exception.Message);
-            }
-            catch (Exception exception)
-            {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EditingError));
             }
         }
 
@@ -148,21 +158,17 @@ namespace Musical_Theatre.Controllers
                     int entitiesWritten = _performanceService.EditPerformance(performanceForm, oldPerformance);
 
                     if (entitiesWritten == 0)
-                        return NotFound("No entites were written to the database!"); // TODO: simpler error
+                        return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));
 
                     return RedirectToAction(nameof(Index));
                 }
                 catch (ArgumentNullException exception)
                 {
-                    return NotFound(exception.Message);
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));
                 }
                 catch (MySqlException exception)
                 {
-                    return NotFound(exception.Message);
-                }
-                catch (Exception exception)
-                {
-                    return NotFound(exception.Message);
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EditingError));
                 }
             }
             ViewData["HallId"] = new SelectList(_hallService.GetHallData(), "Id", "Name", performanceForm.HallId);
@@ -175,33 +181,52 @@ namespace Musical_Theatre.Controllers
             // TODO: remove context from controller
             if (_performanceService.GetPerformances() == null)
             {
-                return NotFound();
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
             }
-
-            var performance = _performanceService.GetPerformanceById(id);
-            if (performance == null)
+            try
             {
-                return NotFound();
+                var performance = _performanceService.GetPerformanceById(id);
+                return View(performance);
+
+            }
+            catch (ArgumentNullException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));
+            }
+            catch (MySqlException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
             }
 
-            return View(performance);
+
+
         }
 
         // POST: Performances/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken] // TODO: remove
         public IActionResult DeleteConfirmed(int id)
         {
             if (_performanceService.GetPerformances() == null)
             {
                 return Problem("Entity set 'Musical_TheatreContext.Performances'  is null.");
             }
-            int entitiesWritten = _performanceService.DeletePerformance(id);
-            if (entitiesWritten == 0)
+            try
             {
-                return NotFound("No entites were removed from the database!");
+                int entitiesWritten = _performanceService.DeletePerformance(id);
+                if (entitiesWritten == 0)
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));
+
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            catch (ArgumentNullException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));
+            }
+            catch (MySqlException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
+            }
+
 
         }
 

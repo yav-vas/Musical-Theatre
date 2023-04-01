@@ -26,11 +26,11 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return NotFound(exception.Message); // TODO: RedirectToAction(nameof(Error))
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHalls));
             }
             catch (MySqlException exception)
             {
-                return NotFound(exception.Message);
+                return NotFound(ErrorMessages.AccsessingError);
             }
         }
 
@@ -49,11 +49,11 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(exception.ParamName));
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
             }
             catch (MySqlException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
             }
         }
 
@@ -76,21 +76,17 @@ namespace Musical_Theatre.Controllers
                     int entitiesWritten =  _hallService.AddHall(hall);
 
                     if (entitiesWritten == 0)
-                        return NotFound("No entities were written to the database!");
+                        return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));
 
                     return RedirectToAction(nameof(Index));
                 } 
                 catch (ArgumentNullException exception)
                 {
-                    return NotFound(exception.Message);
-                }
-                catch (ArgumentException exception)
-                {
-                    return NotFound(exception.Message);
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
                 }
                 catch (MySqlException exception)
                 {
-                    return NotFound(exception.Message);
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.CreationError));
                 }
             }
             return View(hall);
@@ -107,11 +103,11 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
             }
             catch (MySqlException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EditingError));
             }
         }
 
@@ -129,17 +125,17 @@ namespace Musical_Theatre.Controllers
                     int entitiesWritten =  _hallService.EditHall(id, hall);
 
                     if (entitiesWritten == 0)
-                        return NotFound("No entites were written to the database!");
+                        return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));
 
                     return RedirectToAction(nameof(Index));
                 }
                 catch (ArgumentException exception)
                 {
-                    return NotFound(exception.Message);
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
                 }
                 catch (MySqlException exception)
                 {
-                    return NotFound(exception.Message);
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EditingError));
                 }
             }
             return View(hall);
@@ -155,11 +151,11 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(exception.ParamName));
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
             }
             catch (MySqlException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
             }
         }
 
@@ -173,17 +169,17 @@ namespace Musical_Theatre.Controllers
                 int entitiesWritten =  _hallService.DeleteHall(id);
 
                 if (entitiesWritten == 0)
-                    return NotFound("No entities were written to the database!");
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));
 
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentNullException exception)
             {
-                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(exception.ParamName));
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
             }
             catch (MySqlException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
             }
         }
     }

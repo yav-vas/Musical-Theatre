@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Musical_Theatre.Constants;
 using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
 using Musical_Theatre.Services.Interfaces;
@@ -26,24 +27,54 @@ namespace Musical_Theatre.Controllers
 
         public IActionResult Buy(int id)
         {
-            Performance performance = _performanceService.GetPerformanceById(id);
-            string name = performance.Name;
-
-            Hall hall = performance.Hall;
-
-            List<List<Seat>> seats = new List<List<Seat>>();
-
-            for (int row = 1; row <= hall.Rows; row++)
+            try
             {
-                seats.Add(new List<Seat>());
-                for (int column = 1; column <= hall.Columns; column++)
+                Performance performance = _performanceService.GetPerformanceById(id);
+                if (performance == null)
                 {
-                    var seat = _seatService.GetSeatByRowAndColumnAndPerformance(row, column, performance);
-                    seats.ElementAt(row - 1).Add(seat);
+
                 }
+                string name = performance.Name;
+
+                Hall hall = performance.Hall;
+
+                List<List<Seat>> seats = new List<List<Seat>>();
+
+                for (int row = 1; row <= hall.Rows; row++)
+                {
+                    seats.Add(new List<Seat>());
+                    for (int column = 1; column <= hall.Columns; column++)
+                    {
+                        try
+                        {
+                            var seat = _seatService.GetSeatByRowAndColumnAndPerformance(row, column, performance);
+                            seats.ElementAt(row - 1).Add(seat);
+
+                        }
+                        catch (ArgumentNullException exception)
+                        {
+                            return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.WrongSeatError));
+                        }
+                        catch (MySqlException exception)
+                        {
+                            return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
+                        }
+                        
+                    }
+                }
+
+                return View(new TicketViewModel(name, seats, hall));
+            }
+            catch (ArgumentNullException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));
+            }
+            
+            catch (MySqlException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
             }
 
-            return View(new TicketViewModel(name, seats, hall));
         }
 
         [HttpPost]
@@ -54,13 +85,18 @@ namespace Musical_Theatre.Controllers
             {
                 int entitiesWritten = _ticketService.BuyTicket(id, ticketForm);
                 if (entitiesWritten == 0)
-                    return NotFound("No entities were written to the database!");
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));
 
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception exception)
+            catch (ArgumentException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.WrongSeatError));
+            }
+
+            catch (MySqlException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
             }
         }
     }
