@@ -18,7 +18,8 @@ namespace Musical_Theatre.Tests
         private IPerformanceRepository performanceRepository;
         private IPerformanceService performanceService;
         private ISeatService seatService;
-        private ICommonRepository<Hall> commonRepository;
+        private ICommonRepository<Hall> commonHallRepository;
+        private ICommonRepository<Performance> commonPerformanceRepository;
         private Hall hall;
         private Hall secondHall;
         private Performance performance;
@@ -30,15 +31,17 @@ namespace Musical_Theatre.Tests
             var options = new DbContextOptionsBuilder<Musical_TheatreContext>().UseInMemoryDatabase("TestDb");
 
             context = new Musical_TheatreContext(options.Options);
+            seatRepository = new SeatRepository(context);
             seatService = new SeatService(seatRepository);
             hallRepository = new HallRepository(context);
-            seatRepository = new SeatRepository(context);
             performanceRepository = new PerformanceRepository(context);
-            commonRepository = new CommonRepository<Hall>(context);
+            commonHallRepository = new CommonRepository<Hall>(context);
+            commonPerformanceRepository = new CommonRepository<Performance>(context);
 
-            hallService = new HallService(seatService, hallRepository, performanceRepository, commonRepository);
+            hallService = new HallService(seatService, hallRepository, performanceRepository, commonHallRepository);
+            performanceService = new PerformanceService(performanceRepository, seatService, hallRepository, commonPerformanceRepository);
 
-             hall = new Hall(1, "Test Hall", 5, 5, DateTime.Now);
+            hall = new Hall(1, "Test Hall", 5, 5, DateTime.Now);
             secondHall = new Hall(1, "Test halls", 7, 7, DateTime.Now);
             performance = new Performance(1,"Test Performance",1,"Details");
             performanceViewModel= new PerformanceViewModel("Test Performance", 1, "Details");
@@ -98,7 +101,7 @@ namespace Musical_Theatre.Tests
         public void EditHallAndChangeSeatsReturnsSeats()
         {
             hallRepository.Add(hall);
-            performanceViewModel.PerformanceId= performance.Id;
+            performanceViewModel.PerformanceId = performance.Id;
             performanceService.AddPerformance(performanceViewModel);
             var seatsCount = seatRepository.GetAllSeatsForPerformance(performance).Count();
             hallService.EditHall(hall.Id, secondHall);
