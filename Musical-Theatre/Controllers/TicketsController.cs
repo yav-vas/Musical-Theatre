@@ -58,11 +58,7 @@ namespace Musical_Theatre.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch (ArgumentNullException exception)
-            {
-                return NotFound(exception.Message);
-            }
-            catch (MySqlException exception)
+            catch (Exception exception)
             {
                 return NotFound(exception.Message);
             }
