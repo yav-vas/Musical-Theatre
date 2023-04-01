@@ -65,7 +65,6 @@ namespace Musical_Theatre.Services
                 throw new ArgumentNullException("Given hall is null");
             Performance performance = new Performance() 
             {
-                Id = performancesCount += 1,
                 Name = performanceForm.Name,
                 Hall= hall,
                 HallId= performanceForm.HallId,

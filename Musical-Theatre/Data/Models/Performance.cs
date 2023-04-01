@@ -13,7 +13,6 @@ namespace Musical_Theatre.Data.Models
 
         public Performance(int id, string name, int hallId, string details)
         {
-            Id = id;
             Name = name;
             HallId = hallId;
             Details = details;

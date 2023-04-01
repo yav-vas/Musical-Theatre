@@ -28,10 +28,13 @@ namespace Musical_Theatre.Repositories
         {
             return context.Seats.Include(s=> s.Performance).ThenInclude(p=> p.Hall).ToList();
         }
+        public List<Seat> GetAllSeatsForPerformance(Performance performance) { 
+        return context.Seats.Include(s=> s.Performance).ThenInclude(p=> p.Hall).Where(s => s.Performance == performance).ToList();
+        }
 
         public Seat GetById(int id)
         {
-            Seat seat = context.Seats.Include(s => s.Performance).ThenInclude(p => p.Hall).FirstOrDefault(p => p.Id == id);
+            Seat seat = context.Seats.Include(s => s.Performance).ThenInclude(p => p.Hall).FirstOrDefault(s => s.Id == id);
             return seat;
         }
 

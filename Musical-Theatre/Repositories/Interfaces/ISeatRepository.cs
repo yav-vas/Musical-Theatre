@@ -12,7 +12,6 @@ namespace Musical_Theatre.Repositories.Interfaces
         public List<Seat> GetAllWithHallAndPerformance();
         public int Add(Seat seat);
         public int RemoveRangeOfSeats(int performanceId, int row, int column);
-           
-
+        public List<Seat> GetAllSeatsForPerformance(Performance performance);
     }
 }
