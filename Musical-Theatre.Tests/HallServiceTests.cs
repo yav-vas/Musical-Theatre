@@ -52,5 +52,29 @@ namespace Musical_Theatre.Tests
 
             Assert.AreEqual(halls.Count(), 2);
         }
+
+        [Test]
+        public void GetAllHallDataReturnsIEnumerableOfHalls()
+        {
+            Hall hall = new Hall(1, "Test hall", 5, 5, DateTime.Now);
+            Hall secondHall = new Hall(2, "Test halls", 7, 7, DateTime.Now);
+
+            hallRepository.Add(hall);
+            hallRepository.Add(secondHall);
+
+            var halls = hallService.GetHallData();
+
+            Assert.AreEqual(halls.Count(), 2);
+
+        }
+        [Test]
+        public void GetHallByIdReturnsHall()
+        {
+            Hall hall = new Hall(1, "Test Hall", 5, 5, DateTime.Now);
+            hallRepository.Add(hall);
+            var selectedHall = hallRepository.GetById(1);
+            Assert.IsNotNull(selectedHall);
+            Assert.AreEqual(selectedHall, hall);
+        }
     }
 }
