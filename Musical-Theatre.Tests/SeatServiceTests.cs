@@ -49,7 +49,7 @@ namespace Musical_Theatre.Tests
             hall = new Hall(1, "Test Hall", 5, 5, DateTime.Now);
             biggerHall = new Hall(1, "Test halls", 7, 7, DateTime.Now);
             performance = new Performance(1, "Test Performance", 1, "Details");
-            performanceViewModel = new PerformanceViewModel("Test Performance", 1, "Details");
+            performanceViewModel = new PerformanceViewModel(1, "Test Performance", 1, "Details");
             seat = new Seat(performance, 1, 1);
         }
         [TearDown]

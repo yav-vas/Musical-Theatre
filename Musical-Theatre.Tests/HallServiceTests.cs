@@ -43,8 +43,8 @@ namespace Musical_Theatre.Tests
 
             hall = new Hall(1, "Test Hall", 5, 5, DateTime.Now);
             secondHall = new Hall(1, "Test halls", 7, 7, DateTime.Now);
-            performance = new Performance(1,"Test Performance",1,"Details");
-            performanceViewModel= new PerformanceViewModel("Test Performance", 1, "Details");
+            performance = new Performance(1, "Test Performance", 1, "Details");
+            performanceViewModel= new PerformanceViewModel(1, "Test Performance", 1, "Details");
         }
 
         [TearDown]
