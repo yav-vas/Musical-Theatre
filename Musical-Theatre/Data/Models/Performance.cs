@@ -9,7 +9,6 @@ namespace Musical_Theatre.Data.Models
     {
         public Performance()
         {
-            PriceCategories = new HashSet<PriceCategory>();
         }
 
         public Performance(int id, string name, int hallId, Hall hall, string details)
@@ -31,7 +30,6 @@ namespace Musical_Theatre.Data.Models
 
         public Hall Hall { get; set; }
         public string Details { get; set; }
-        public HashSet<PriceCategory> PriceCategories { get; set; }
 
     }
 }

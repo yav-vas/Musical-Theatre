@@ -14,10 +14,5 @@ namespace Musical_Theatre.Controllers
 		{
 			return View();
 		}
-
-		public IActionResult Privacy()
-		{
-			return View();
-		}
 	}
 }

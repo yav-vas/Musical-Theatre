@@ -16,17 +16,14 @@ namespace Musical_Theatre
 			var connectionString = builder.Configuration.GetConnectionString("Musical_TheatreContextConnection") ?? throw new InvalidOperationException("Connection string 'Musical_TheatreContextConnection' not found.");
 
 			builder.Services.AddDbContext<Musical_TheatreContext>(options => options.UseMySQL(connectionString));
-
-			builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Musical_TheatreContext>();
 			
-			// AddHall services to the container.
 			builder.Services.AddControllersWithViews();
 
-			builder.Services.AddScoped<IPerformanceRepository, PerformanceRepository>();
+            builder.Services.AddScoped<ICommonRepository, CommonRepository>();
+            builder.Services.AddScoped<IPerformanceRepository, PerformanceRepository>();
 			builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 			builder.Services.AddScoped<IHallRepository, HallRepository>();
 			builder.Services.AddScoped<ISeatRepository, SeatRepository>();
-			builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 
 			builder.Services.AddScoped<PerformanceService>();
 			builder.Services.AddScoped<HallService>();
@@ -53,7 +50,6 @@ namespace Musical_Theatre
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
-			app.MapRazorPages();
 
 			app.Run();
 		}

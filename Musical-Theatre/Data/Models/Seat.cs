@@ -32,9 +32,5 @@ namespace Musical_Theatre.Data.Models
         public int SeatNumber { get; set; }
 
         public Ticket? Ticket { get; set; }
-
-        [ForeignKey(nameof(PriceCategory))]
-        public int? PriceCategoryId { get; }
-        public PriceCategory? PriceCategory { get; set; }
     }
 }

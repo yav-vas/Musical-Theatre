@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Musical_Theatre.Data.Context;
 
@@ -10,9 +11,11 @@ using Musical_Theatre.Data.Context;
 namespace Musical_Theatre.Migrations
 {
     [DbContext(typeof(Musical_TheatreContext))]
-    partial class Musical_TheatreContextModelSnapshot : ModelSnapshot
+    [Migration("20230401065331_Remove Users and Price categories")]
+    partial class RemoveUsersandPricecategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
