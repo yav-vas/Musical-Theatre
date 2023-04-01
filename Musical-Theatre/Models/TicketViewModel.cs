@@ -23,6 +23,13 @@ namespace Musical_Theatre.Models
             Hall = hall;
         }
 
+        public TicketViewModel(string performanceName, int row, int seatNumber)
+        {
+            PerformanceName = performanceName;
+            Row = row;
+            SeatNumber = seatNumber;
+        }
+
         public int TicketId { get; set; }
 
         public List<List<Seat>> Seats { get; set; }

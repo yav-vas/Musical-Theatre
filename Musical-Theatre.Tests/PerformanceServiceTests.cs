@@ -49,7 +49,7 @@ namespace Musical_Theatre.Tests
         {
             GenerateOnePerformanceAndOneHall();
 
-            Assert.AreEqual(performanceRepository.GetCount(), 1);
+            Assert.AreEqual(performanceService.GetPerformances().Count(), 1);
         }
 
         [Test]
