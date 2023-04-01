@@ -1,19 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Musical_Theatre.Data.Context;
 using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
-using Musical_Theatre.Services;
+using Musical_Theatre.Services.Interfaces;
 using MySql.Data.MySqlClient;
 
 namespace Musical_Theatre.Controllers
 {
     public class TicketsController : Controller
     {
-        private readonly TicketService _ticketService;
-        private readonly PerformanceService _performanceService;
-        private readonly SeatService _seatService;
-        public TicketsController(TicketService ticketService, PerformanceService performanceService, SeatService seatService)
+        private readonly ITicketService _ticketService;
+        private readonly IPerformanceService _performanceService;
+        private readonly ISeatService _seatService;
+        public TicketsController(ITicketService ticketService, IPerformanceService performanceService, ISeatService seatService)
         {
             _ticketService = ticketService;
             _performanceService = performanceService;

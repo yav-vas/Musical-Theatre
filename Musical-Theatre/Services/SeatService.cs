@@ -1,19 +1,16 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-using Musical_Theatre.Data.Context;
-using Musical_Theatre.Data.Models;
+﻿using Musical_Theatre.Data.Models;
 using Musical_Theatre.Repositories.Interfaces;
+using Musical_Theatre.Services.Interfaces;
 
 namespace Musical_Theatre.Services
 {
-    public class SeatService
+    public class SeatService : ISeatService
     {
         private readonly ISeatRepository seatRepository;
 
         public SeatService(ISeatRepository seatRepository)
         {
             this.seatRepository = seatRepository;
-
         }
 
         public List<Seat> GetSeats()
@@ -73,15 +70,7 @@ namespace Musical_Theatre.Services
             {
                 for (int column = 1; column <= columnsCount; column++)
                 {
-                    Seat seat = new Seat()
-                    {
-                        Id = seatId,
-                        Row = row,
-                        SeatNumber = column,
-                        Performance = performance,
-                        PerformanceId = performance.Id,
-
-                    };
+                    Seat seat = new Seat(performance, row, column);
                     
                     seatRepository.Add(seat);
                 }

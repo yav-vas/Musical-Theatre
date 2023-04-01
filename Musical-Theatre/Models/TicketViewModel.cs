@@ -34,6 +34,7 @@ namespace Musical_Theatre.Models
         [Required]
         public int Row { get; set; }
         [Required]
+        [Display(Name = "Seat number")]
         public int SeatNumber { get; set; } 
     }
 }

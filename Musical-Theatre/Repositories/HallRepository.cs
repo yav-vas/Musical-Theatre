@@ -15,8 +15,6 @@ namespace Musical_Theatre.Repositories
         }
         public int GetCount()
         {
-           
-
             List<Hall> halls = _context.Halls.ToList();
             return halls.Count;
         }
@@ -50,12 +48,5 @@ namespace Musical_Theatre.Repositories
             _context.Halls.Remove(hall);
             return _context.SaveChanges();
         }
-
-        public void Detach(Hall hall)
-        {
-            _context.Entry(hall).State = EntityState.Detached;
-        }
-
-      
     }
-    }
+}

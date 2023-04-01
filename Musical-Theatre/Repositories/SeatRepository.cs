@@ -26,7 +26,7 @@ namespace Musical_Theatre.Repositories
 
         public List<Seat> GetAllWithHallAndPerformance()
         {
-          return  context.Seats.Include(s=> s.Performance).ThenInclude(p=> p.Hall).ToList();
+            return context.Seats.Include(s=> s.Performance).ThenInclude(p=> p.Hall).ToList();
         }
 
         public Seat GetById(int id)

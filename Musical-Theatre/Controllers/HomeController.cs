@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Musical_Theatre.Models;
-using System.Diagnostics;
 
 namespace Musical_Theatre.Controllers
 {

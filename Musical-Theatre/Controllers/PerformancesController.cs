@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Musical_Theatre.Data.Context;
-using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
-using Musical_Theatre.Services;
+using Musical_Theatre.Services.Interfaces;
 using MySql.Data.MySqlClient;
 
 namespace Musical_Theatre.Controllers
 {
     public class PerformancesController : Controller
     {
-        private readonly PerformanceService _performanceService;
-        private readonly HallService _hallService;
-        public PerformancesController(PerformanceService performanceService, HallService hallService)
+        private readonly IPerformanceService _performanceService;
+        private readonly IHallService _hallService;
+        public PerformancesController(IPerformanceService performanceService, IHallService hallService)
         {
             _performanceService = performanceService;
             _hallService = hallService;

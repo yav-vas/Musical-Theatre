@@ -1,26 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Musical_Theatre.Data.Context;
-using Musical_Theatre.Data.Models;
+﻿using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
-using Musical_Theatre.Repositories;
 using Musical_Theatre.Repositories.Interfaces;
-using MySql.Data.MySqlClient;
-using Mysqlx.Resultset;
+using Musical_Theatre.Services.Interfaces;
 
 namespace Musical_Theatre.Services
 {
-    public class PerformanceService
+    public class PerformanceService : IPerformanceService
     {
         private readonly IPerformanceRepository performanceRepository;
-        private readonly SeatService seatService;
+        private readonly ISeatService seatService;
         private readonly IHallRepository hallRepository;
-        private readonly ICommonRepository commonRepository;
+        private readonly ICommonRepository<Performance> commonRepository;
 
-
-        public PerformanceService(IPerformanceRepository performanceRepository,SeatService seatService, IHallRepository hallRepository, ICommonRepository commonRepository)
+        public PerformanceService(IPerformanceRepository performanceRepository,ISeatService seatService, IHallRepository hallRepository, ICommonRepository<Performance> commonRepository)
         {
             this.performanceRepository = performanceRepository;
             this.seatService = seatService;

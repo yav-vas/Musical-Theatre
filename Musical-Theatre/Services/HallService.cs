@@ -1,21 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Musical_Theatre.Data.Context;
-using Musical_Theatre.Data.Models;
+﻿using Musical_Theatre.Data.Models;
 using Musical_Theatre.Repositories.Interfaces;
+using Musical_Theatre.Services.Interfaces;
 
 namespace Musical_Theatre.Services
 {
-    public class HallService
+    public class HallService : IHallService
     {
-        private readonly SeatService seatService;
+        private readonly ISeatService seatService;
         private readonly IHallRepository hallRepository;
         private readonly IPerformanceRepository performanceRepository;
+        private readonly ICommonRepository<Hall> commonRepository;
 
-        public HallService(SeatService seatService, IHallRepository hallRepository, IPerformanceRepository performanceRepository)
+        public HallService(ISeatService seatService, IHallRepository hallRepository, IPerformanceRepository performanceRepository, ICommonRepository<Hall> commonRepository)
         {
             this.seatService = seatService;
             this.hallRepository = hallRepository;
             this.performanceRepository = performanceRepository;
+            this.commonRepository = commonRepository;
         }
 
         public List<Hall>? GetHalls()
@@ -83,7 +84,7 @@ namespace Musical_Theatre.Services
             if (currentHall == null)
                 throw new ArgumentNullException("Hall with id " + id + " not found!");
 
-            hallRepository.Detach(currentHall);
+            commonRepository.Detach(currentHall);
 
             var performances = performanceRepository.GetHallPerformances(newHall.Id);
             foreach (var performance in performances) 

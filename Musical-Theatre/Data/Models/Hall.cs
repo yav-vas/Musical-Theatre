@@ -11,14 +11,13 @@ namespace Musical_Theatre.Data.Models
         {
             Performances = new HashSet<Performance>();
         }
-        public Hall(int id, string name, int rows, int columns, DateTime dateCreated, HashSet<Performance> performances)
+        public Hall(int id, string name, int rows, int columns, DateTime dateCreated)
         {
             Id = id;
             Name = name;
             Rows = rows;
             Columns = columns;
             DateCreated = dateCreated;
-            Performances = performances;
         }
 
         [Key]
@@ -37,6 +36,7 @@ namespace Musical_Theatre.Data.Models
         public int Columns { get; set; }
 
         [DataType(DataType.DateTime)]
+        [Display(Name = "Date created")]
         public DateTime DateCreated { get; set; }
 
         public HashSet<Performance> Performances { get; set; }

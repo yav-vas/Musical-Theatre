@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Musical_Theatre.Services;
 using MySql.Data.MySqlClient;
 using Musical_Theatre.Data.Models;
+using Musical_Theatre.Services.Interfaces;
 
 namespace Musical_Theatre.Controllers
 {
     public class HallsController : Controller
     {
-        private readonly HallService _hallService;
+        private readonly IHallService _hallService;
 
-        public HallsController(HallService hallService)
+        public HallsController(IHallService hallService)
         {
             _hallService = hallService;
         }

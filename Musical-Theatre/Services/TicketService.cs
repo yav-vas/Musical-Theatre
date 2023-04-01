@@ -1,18 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Musical_Theatre.Data.Context;
-using Musical_Theatre.Data.Models;
+﻿using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
-using Musical_Theatre.Repositories;
 using Musical_Theatre.Repositories.Interfaces;
+using Musical_Theatre.Services.Interfaces;
 
 namespace Musical_Theatre.Services
 {
-    public class TicketService
+    public class TicketService : ITicketService
     {
         private readonly IPerformanceRepository performanceRepository;
         private readonly ITicketRepository ticketRepository;
         private readonly ISeatRepository seatRepository;
+
         public TicketService(IPerformanceRepository performanceRepository, ITicketRepository ticketRepository, ISeatRepository seatRepository)
         {
             this.performanceRepository = performanceRepository;

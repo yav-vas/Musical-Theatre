@@ -5,6 +5,7 @@ using Musical_Theatre.Data.Models;
 using Musical_Theatre.Repositories;
 using Musical_Theatre.Repositories.Interfaces;
 using Musical_Theatre.Services;
+using Musical_Theatre.Services.Interfaces;
 
 namespace Musical_Theatre
 {
@@ -16,19 +17,23 @@ namespace Musical_Theatre
 			var connectionString = builder.Configuration.GetConnectionString("Musical_TheatreContextConnection") ?? throw new InvalidOperationException("Connection string 'Musical_TheatreContextConnection' not found.");
 
 			builder.Services.AddDbContext<Musical_TheatreContext>(options => options.UseMySQL(connectionString));
-			
+
 			builder.Services.AddControllersWithViews();
 
-            builder.Services.AddScoped<ICommonRepository, CommonRepository>();
+            builder.Services.AddScoped<ICommonRepository<Hall>, CommonRepository<Hall>>();
+            builder.Services.AddScoped<ICommonRepository<Performance>, CommonRepository<Performance>>();
+            builder.Services.AddScoped<ICommonRepository<Seat>, CommonRepository<Seat>>();
+            builder.Services.AddScoped<ICommonRepository<Ticket>, CommonRepository<Ticket>>();
+
             builder.Services.AddScoped<IPerformanceRepository, PerformanceRepository>();
 			builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 			builder.Services.AddScoped<IHallRepository, HallRepository>();
 			builder.Services.AddScoped<ISeatRepository, SeatRepository>();
 
-			builder.Services.AddScoped<PerformanceService>();
-			builder.Services.AddScoped<HallService>();
-			builder.Services.AddScoped<TicketService>();
-			builder.Services.AddScoped<SeatService>();
+			builder.Services.AddScoped<IPerformanceService, PerformanceService>();
+			builder.Services.AddScoped<IHallService, HallService>();
+			builder.Services.AddScoped<ITicketService, TicketService>();
+			builder.Services.AddScoped<ISeatService, SeatService>();
 
 			var app = builder.Build();
 
