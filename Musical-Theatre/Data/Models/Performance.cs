@@ -7,12 +7,22 @@ namespace Musical_Theatre.Data.Models
 {
     public class Performance
     {
-        [Key]
-        public int Id { get; set; }
         public Performance()
         {
             PriceCategories = new HashSet<PriceCategory>();
         }
+
+        public Performance(int id, string name, int hallId, Hall hall, string details)
+        {
+            Id = id;
+            Name = name;
+            HallId = hallId;
+            Hall = hall;
+            Details = details;
+        }
+
+        [Key]
+        public int Id { get; set; }
         [Required]
         [MaxLength(DataConstants.MaxPerformanceNameLength)]
         [UniquePerformanceName(nameof(Id))]

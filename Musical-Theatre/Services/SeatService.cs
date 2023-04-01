@@ -67,16 +67,22 @@ namespace Musical_Theatre.Services
             Hall hall = performance.Hall;
             int rowsCount = hall.Rows;
             int columnsCount = hall.Columns;
+            int seatId = seatRepository.GetCount() + 1;
 
             for (int row = 1; row <= rowsCount; row++)
             {
                 for (int column = 1; column <= columnsCount; column++)
                 {
-                    Seat seat = new Seat();
-                    seat.Performance = performance;
-                    seat.PerformanceId = performance.Id;
-                    seat.SeatNumber = column;
-                    seat.Row = row;
+                    Seat seat = new Seat()
+                    {
+                        Id = seatId,
+                        Row = row,
+                        SeatNumber = column,
+                        Performance = performance,
+                        PerformanceId = performance.Id,
+
+                    };
+                    
                     seatRepository.Add(seat);
                 }
             }

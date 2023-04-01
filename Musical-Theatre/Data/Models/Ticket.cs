@@ -5,6 +5,17 @@ namespace Musical_Theatre.Data.Models
 {
     public class Ticket
     {
+        public Ticket()
+        {
+
+        }
+        public Ticket(int id, int seatId, Seat seat)
+        {
+            Id = id;
+            SeatId = seatId;
+            Seat = seat;
+        }
+
         [Key]
         public int Id { get; set; }
 

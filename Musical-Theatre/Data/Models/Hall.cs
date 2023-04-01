@@ -11,6 +11,16 @@ namespace Musical_Theatre.Data.Models
         {
             Performances = new HashSet<Performance>();
         }
+        public Hall(int id, string name, int rows, int columns, DateTime dateCreated, HashSet<Performance> performances)
+        {
+            Id = id;
+            Name = name;
+            Rows = rows;
+            Columns = columns;
+            DateCreated = dateCreated;
+            Performances = performances;
+        }
+
         [Key]
         public int Id { get; set; }
 

@@ -40,7 +40,6 @@ namespace Musical_Theatre.Services
             ticket.Seat = chosenSeat;
 
             chosenSeat.Ticket = ticket;
-
             
 
             int entitieswritten = ticketRepository.Add(ticket);

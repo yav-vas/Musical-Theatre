@@ -5,6 +5,7 @@ namespace Musical_Theatre.Repositories.Interfaces
 {
     public interface ISeatRepository
     {
+        public int GetCount();
         public List<Seat> GetAll();
         public Seat GetByRowAndColumnAndPerformance(int row, int column, Performance performance);
         public Seat GetById(int id);

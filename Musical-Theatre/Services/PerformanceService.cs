@@ -71,14 +71,14 @@ namespace Musical_Theatre.Services
 
             if (performanceForm == null)
                 throw new ArgumentNullException("Given hall is null");
-            Performance performance = new Performance();
-            // TODO: create a constructor
-            performance.Id = performancesCount += 1;
-            performance.Name = performanceForm.Name;
-            performance.Hall = hall;
-            performance.HallId = performanceForm.HallId;
-            performance.Details = performanceForm.Details;
-
+            Performance performance = new Performance() 
+            {
+                Id = performancesCount += 1,
+                Name = performanceForm.Name,
+                Hall= hall,
+                HallId= performanceForm.HallId,
+                Details= performanceForm.Details
+            };
             performanceRepository.Add(performance);
             seatService.AddSeatsForPerformance(performance);
 
@@ -108,7 +108,6 @@ namespace Musical_Theatre.Services
             {
                 seatService.SetNewSeatLayout(performance, performance.Hall.Rows, performance.Hall.Columns, hall.Rows, hall.Columns);
             }
-
             performance.Details = performanceForm.Details;
             performance.HallId = performanceForm.HallId;
             performance.Name = performanceForm.Name;
