@@ -2,6 +2,8 @@
 using MySql.Data.MySqlClient;
 using Musical_Theatre.Data.Models;
 using Musical_Theatre.Services.Interfaces;
+using Musical_Theatre.Models;
+using Musical_Theatre.Constants;
 
 namespace Musical_Theatre.Controllers
 {
@@ -37,7 +39,7 @@ namespace Musical_Theatre.Controllers
         {
             if (id == null)
             {
-                return NotFound("Id is null");
+                return RedirectToAction(nameof(HomeController.Error), "Id is null");
             }
 
             try
@@ -47,7 +49,7 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(exception.ParamName));
             }
             catch (MySqlException exception)
             {
@@ -153,7 +155,7 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(exception.ParamName));
             }
             catch (MySqlException exception)
             {
@@ -177,7 +179,7 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-                return NotFound(exception.Message);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(exception.ParamName));
             }
             catch (MySqlException exception)
             {

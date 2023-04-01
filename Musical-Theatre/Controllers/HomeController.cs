@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Musical_Theatre.Models;
 
 namespace Musical_Theatre.Controllers
 {
@@ -11,6 +12,12 @@ namespace Musical_Theatre.Controllers
 		public IActionResult Index()
 		{
 			return View();
+		}
+
+		public IActionResult Error(string errorMessage)
+		{
+			ErrorViewModel errorModel = new ErrorViewModel(errorMessage);
+			return View(errorModel);
 		}
 	}
 }

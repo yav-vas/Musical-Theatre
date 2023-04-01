@@ -82,7 +82,7 @@ namespace Musical_Theatre.Services
             var currentHall =  hallRepository.GetById(newHall.Id);
                 
             if (currentHall == null)
-                throw new ArgumentNullException("Hall with id " + id + " not found!");
+                throw new ArgumentNullException($"Hall with id {id} not found!");
 
             commonRepository.Detach(currentHall);
 
