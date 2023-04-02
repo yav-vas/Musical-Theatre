@@ -39,7 +39,7 @@ namespace Musical_Theatre.Controllers
         }
 
         // GET: Halls/Details/5
-        public IActionResult Details(int id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -48,7 +48,7 @@ namespace Musical_Theatre.Controllers
 
             try
             {
-                var hall =  _hallService.GetHallById(id);
+                var hall =  _hallService.GetHallById((int)id);
                 return View(hall);
             }
             catch (ArgumentNullException exception)
@@ -130,6 +130,7 @@ namespace Musical_Theatre.Controllers
         }
 
         [HttpPost]
+        // TODO: validate id with validation property
         public  IActionResult Edit(int id, [Bind("Id,Name,Rows,Columns")] Hall hall)
         {
             if (ModelState.IsValid)
