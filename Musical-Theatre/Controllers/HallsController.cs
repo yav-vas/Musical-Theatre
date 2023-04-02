@@ -30,7 +30,11 @@ namespace Musical_Theatre.Controllers
             }
             catch (MySqlException exception)
             {
-                return NotFound(ErrorMessages.AccsessingError);
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
             }
         }
 
@@ -54,6 +58,10 @@ namespace Musical_Theatre.Controllers
             catch (MySqlException exception)
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
             }
         }
 
@@ -88,6 +96,10 @@ namespace Musical_Theatre.Controllers
                 {
                     return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.CreationError));
                 }
+                catch (Exception exception)
+                {
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+                }
             }
             return View(hall);
 
@@ -108,6 +120,10 @@ namespace Musical_Theatre.Controllers
             catch (MySqlException exception)
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EditingError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
             }
         }
 
@@ -137,6 +153,10 @@ namespace Musical_Theatre.Controllers
                 {
                     return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EditingError));
                 }
+                catch (Exception exception)
+                {
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+                }
             }
             return View(hall);
         }
@@ -156,6 +176,10 @@ namespace Musical_Theatre.Controllers
             catch (MySqlException exception)
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
             }
         }
 
@@ -180,6 +204,10 @@ namespace Musical_Theatre.Controllers
             catch (MySqlException exception)
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
             }
         }
     }

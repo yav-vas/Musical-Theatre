@@ -34,6 +34,10 @@ namespace Musical_Theatre.Controllers
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
             }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+            }
         }
 
         // GET: Performances/Details/5
@@ -43,10 +47,12 @@ namespace Musical_Theatre.Controllers
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
             }
-            if (id == null)
+
+            if (id == default)
             {
-                return RedirectToAction(nameof(HomeController.Error), "Id is null");
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.InvalidId));
             }
+
             try
             {
                 var performance = _performanceService.GetPerformanceById(id);
@@ -54,13 +60,15 @@ namespace Musical_Theatre.Controllers
             }
             catch (ArgumentNullException exception)
             {
-
-                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));
-                
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformance));   
             }
             catch (MySqlException exception)
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
             }
 
         }
@@ -101,7 +109,10 @@ namespace Musical_Theatre.Controllers
                     {
                         return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.CreationError));
                     }
-
+                    catch (Exception exception)
+                    {
+                        return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+                    }
                 }
             }
             ViewData["HallId"] = new SelectList(_hallService.GetHallData(), "Id", "Name", performanceForm.HallId);
@@ -141,6 +152,10 @@ namespace Musical_Theatre.Controllers
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EditingError));
             }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+            }
         }
 
         // POST: Performances/Edit/5
@@ -170,6 +185,10 @@ namespace Musical_Theatre.Controllers
                 {
                     return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EditingError));
                 }
+                catch (Exception exception)
+                {
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+                }
             }
             ViewData["HallId"] = new SelectList(_hallService.GetHallData(), "Id", "Name", performanceForm.HallId);
             return View(performanceForm);
@@ -197,9 +216,10 @@ namespace Musical_Theatre.Controllers
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
             }
-
-
-
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+            }
         }
 
         // POST: Performances/Delete/5
@@ -226,8 +246,10 @@ namespace Musical_Theatre.Controllers
             {
                 return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DeletionError));
             }
-
-
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+            }
         }
 
     }
