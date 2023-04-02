@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Musical_Theatre.Constants;
+using Musical_Theatre.Data.Models;
 using Musical_Theatre.Models;
 using Musical_Theatre.Services.Interfaces;
 using MySql.Data.MySqlClient;
@@ -76,15 +77,37 @@ namespace Musical_Theatre.Controllers
         // GET: Performances/Create
         public IActionResult Create()
         {
-            ViewData["HallId"] = new SelectList(_hallService.GetHallData(), "Id", "Name");
-            return View();
+            try
+            {
+                IEnumerable<Hall> data = _hallService.GetHallData();
+
+                if (data.Count() == 0)
+                {
+                    throw new ArgumentException(ErrorMessages.AccsessingError);
+                }
+
+                ViewData["HallId"] = new SelectList(data, "Id", "Name");
+                return View();
+            }
+            catch (ArgumentNullException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
+            }
+            catch (ArgumentException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(exception.ParamName));
+            }
+            catch (MySqlException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+            }
         }
 
-        // POST: Performances/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
             var hall = _hallService.GetHallById(performanceForm.HallId);
@@ -122,13 +145,13 @@ namespace Musical_Theatre.Controllers
         // GET: Performances/Edit/5
         public IActionResult Edit(int id)
         {
-            if (_performanceService.GetPerformances() == null)
-            {
-                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
-            }
-
             try
             {
+                if (_performanceService.GetPerformances() == null)
+                {
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
+                }
+
                 var performance = _performanceService.GetPerformanceById(id);
                 if (performance == null)
                 {
@@ -158,11 +181,7 @@ namespace Musical_Theatre.Controllers
             }
         }
 
-        // POST: Performances/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("PerformanceId,Name,HallId,Details")] PerformanceViewModel performanceForm)
         {
             if (ModelState.IsValid)
@@ -197,13 +216,13 @@ namespace Musical_Theatre.Controllers
         // GET: Performances/Delete/5
         public IActionResult Delete(int id)
         {
-            // TODO: remove context from controller
-            if (_performanceService.GetPerformances() == null)
-            {
-                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
-            }
             try
             {
+                if (_performanceService.GetPerformances() == null)
+                {
+                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyPerformances));
+                }
+
                 var performance = _performanceService.GetPerformanceById(id);
                 return View(performance);
 
@@ -226,12 +245,13 @@ namespace Musical_Theatre.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
-            if (_performanceService.GetPerformances() == null)
-            {
-                return Problem("Entity set 'Musical_TheatreContext.Performances'  is null.");
-            }
             try
             {
+                if (_performanceService.GetPerformances() == null)
+                {
+                    return Problem("Entity set 'Musical_TheatreContext.Performances'  is null.");
+                }
+
                 int entitiesWritten = _performanceService.DeletePerformance(id);
                 if (entitiesWritten == 0)
                     return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));

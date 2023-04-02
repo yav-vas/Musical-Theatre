@@ -43,7 +43,7 @@ namespace Musical_Theatre.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction(nameof(HomeController.Error), "Id is null");
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel("Id is null"));
             }
 
             try
@@ -71,38 +71,35 @@ namespace Musical_Theatre.Controllers
             return View();
         }
 
-        // POST: Halls/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public IActionResult Create(Hall hall)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    int entitiesWritten =  _hallService.AddHall(hall);
+                    int entitiesWritten = _hallService.AddHall(hall);
 
                     if (entitiesWritten == 0)
                         return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.DataTransferError));
 
                     return RedirectToAction(nameof(Index));
-                } 
-                catch (ArgumentNullException exception)
-                {
-                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
-                }
-                catch (MySqlException exception)
-                {
-                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.CreationError));
-                }
-                catch (Exception exception)
-                {
-                    return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
                 }
             }
-            return View(hall);
+            catch (ArgumentNullException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.EmptyHall));
+            }
+            catch (MySqlException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.CreationError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+            }
 
+            return View(hall);
         }
 
         // GET: Halls/EditHall/5
@@ -127,11 +124,7 @@ namespace Musical_Theatre.Controllers
             }
         }
 
-        // POST: Halls/EditHall/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public  IActionResult Edit(int id, [Bind("Id,Name,Rows,Columns")] Hall hall)
         {
             if (ModelState.IsValid)

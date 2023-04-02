@@ -21,8 +21,23 @@ namespace Musical_Theatre.Controllers
 
         public IActionResult Index()
         {
-            var result = _ticketService.GetTickets();
-            return View(result);
+            try
+            {
+                var result = _ticketService.GetTickets();
+                return View(result);
+            }
+            catch (ArgumentNullException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(exception.ParamName));
+            }
+            catch (MySqlException exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.AccsessingError));
+            }
+            catch (Exception exception)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel(ErrorMessages.UnknownError));
+            }
         }
 
         public IActionResult Buy(int id)
