@@ -1,4 +1,7 @@
-﻿using Musical_Theatre.Data.Context;
+﻿using Musical_Theatre.Constants;
+using Musical_Theatre.Data.Context;
+using Musical_Theatre.Models;
+using MySql.Data.MySqlClient;
 using System.ComponentModel.DataAnnotations;
 
 namespace Musical_Theatre.Data.Models.Validation
@@ -21,11 +24,23 @@ namespace Musical_Theatre.Data.Models.Validation
             if (property != null)
             {
                 var id = (int)property.GetValue(validationContext.ObjectInstance);
-                var match = _context.Halls.FirstOrDefault(h => h.Name == name && h.Id != id);
 
-                if (match != default)
+                try
                 {
-                    return new ValidationResult(GetErrorMessage(name));
+                    var match = _context.Halls.FirstOrDefault(h => h.Name == name && h.Id != id);
+
+                    if (match != default)
+                    {
+                        return new ValidationResult(GetErrorMessage(name));
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    return new ValidationResult(ErrorMessages.AccsessingError);
+                }
+                catch (Exception exception)
+                {
+                    return new ValidationResult(ErrorMessages.UnknownError);
                 }
             }
 
