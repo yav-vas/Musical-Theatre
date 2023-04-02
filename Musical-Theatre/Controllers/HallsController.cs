@@ -74,6 +74,11 @@ namespace Musical_Theatre.Controllers
         [HttpPost]
         public IActionResult Create(Hall hall)
         {
+            if (hall == null)
+            {
+                return View(ErrorMessages.ErrorViewFilePath, new ErrorViewModel("Emtpy hall given!"));
+            }
+
             try
             {
                 if (ModelState.IsValid)
