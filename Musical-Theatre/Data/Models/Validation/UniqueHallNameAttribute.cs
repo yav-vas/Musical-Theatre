@@ -17,6 +17,11 @@ namespace Musical_Theatre.Data.Models.Validation
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
+            if (value == null)
+            {
+                return new ValidationResult("Empty name is not allowed!");
+            }
+
             var name = value.ToString();
             var _context = (Musical_TheatreContext)validationContext.GetService(typeof(Musical_TheatreContext));
             var property = validationContext.ObjectType.GetProperty(NameOfId);
