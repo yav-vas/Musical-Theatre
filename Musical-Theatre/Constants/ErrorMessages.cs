@@ -4,6 +4,7 @@
     {
         public const string ErrorViewFilePath = "~/Views/Home/Error.cshtml";
 
+        public const string InvalidId = "The id is not valid. Try again without changing the URL.";
         public const string InvalidHallName = "This Hall does not exist Please enter a valid Hall Name.";
         public const string EmptyPerformances = "There is no Performances, please first add a Performance";
         public const string EmptyPerformance = "There is no Performance with such an Id, please enter a valid Performance Id.";
@@ -16,6 +17,6 @@
         public const string EmptyHall = "There is no Hall with such an Id, please first add a Hall.";
         public const string WrongSeatError = "There is no Valid Seat with such a Row or Seat Number for this Performance. Please check the Hall Layout for both the size of the Hall and which Seats are taken and select a valid Seat.";
 
-
+        public const string UnknownError = "An unknown error occured! Please try again!";
     }
 }
